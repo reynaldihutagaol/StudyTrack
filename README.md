@@ -1,6 +1,6 @@
 # StudyTrack
 
-Aplikasi web manajemen tugas kuliah untuk mahasiswa dengan fitur **Reminder Tugas Mendekati Deadline**.
+Aplikasi web manajemen tugas kuliah untuk mahasiswa dengan fitur **Reminder Tugas Mendekati Deadline**. Proyek ini dibangun di atas starter kit panitia Academya Arkavidia 11.0.
 
 ## Fitur Reminder Tugas Mendekati Deadline
 
@@ -124,3 +124,11 @@ TZ=Asia/Jakarta npm test
    - Meskipun tugas berstatus `selesai` selalu memiliki `deadline_category = "normal"`, nilai `sisa_waktu_ms` tetap dihitung dan disertakan jika string deadline valid, agar konsisten dengan struktur data respon.
 3. **Penyimpanan Runtime**:
    - Berkas database `backend/db.json` adalah data runtime yang diabaikan oleh Git (`.gitignore`), sedangkan data seed awal didefinisikan secara deklaratif di `backend/db.js`.
+
+---
+
+## Keterbatasan yang Diketahui
+
+1. **Asumsi Zona Waktu WIB**: Input waktu dari browser menggunakan elemen `<input type="datetime-local">` yang menghasilkan string waktu lokal tanpa informasi zona waktu atau offset. Oleh karena itu, seluruh nilai deadline tanpa penanda zona diasumsikan dan ditafsirkan secara eksplisit sebagai Waktu Indonesia Barat (WIB / UTC+07:00).
+2. **Penyimpanan Berbasis Berkas JSON**: Penyimpanan data aplikasi saat ini menggunakan berkas flat JSON lokal (`backend/db.json`), sehingga belum mendukung konkurensi tinggi, transaksi ACID multi-tabel, atau replikasi basis data terdistribusi.
+3. **Penyegaran Data Periodik (Bukan Realtime)**: Pembaruan antarmuka pengguna mengandalkan refetch periodik tiap 60 detik dan event fokus jendela (`window.onfocus` / `visibilitychange`), bukan protokol realtime persisten dua arah seperti WebSocket atau Server-Sent Events (SSE).
