@@ -1,23 +1,25 @@
 /* ==========================================================================
-   StudyTrack - Design System Tokens & Neo-Grotesk Stylesheet (v2)
-   Inspirasi: Layout berbingkai perangkat gelap dengan panel terang membulat,
-   tab dengan active notch, aksen blob kurva lime, chip statistik pastel ber-outline,
-   hero priority card, 2-kolom grid, sidebar summary + tilted card + CTA gradient.
+   StudyTrack - Design System Tokens & Neo-Grotesk Stylesheet (v2 Refined)
+   UI Background: Hitam / Dark Canvas (#090d16)
+   Panel Konten: Putih Terang (#ffffff) dengan Outline Gelap Tegas
+   Aksen: Lime (#bef264)
+   Form Input Tugas: Dimuat di bagian atas agar langsung dapat diakses
+   Semua Ikon: Pure SVG (Zero Emoticon/Emoji)
    ========================================================================== */
 
 :root {
   --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  /* Token Warna Utama */
-  --bg-canvas: #ede9fe;            /* Lavender sangat lembut */
-  --frame-bg: #111827;             /* Bingkai perangkat gelap (slate-900) */
+  /* Token Warna Utama: Latar Canvas Gelap / Hitam */
+  --bg-canvas: #090d16;            /* Hitam pekat modern (Slate-950) */
+  --frame-bg: #111827;             /* Bingkai perangkat gelap pekat */
   --panel-bg: #ffffff;             /* Panel terang utama */
   --border-dark: #18181b;          /* Garis outline tegas 1.75px */
   --border-muted: #e4e4e7;
   
   /* Aksen Berwarna */
-  --accent-lime: #bef264;          /* Lime / kuning-hijau segar */
-  --accent-lavender: #ede9fe;      /* Lavender pastel */
+  --accent-lime: #bef264;          /* Lime segar */
+  --accent-slate: #f1f5f9;         /* Netral pastel */
   --accent-amber: #fef3c7;         /* Kuning pastel */
   --accent-red: #fee2e2;           /* Merah pastel */
   --accent-green: #dcfce7;         /* Hijau pastel */
@@ -77,7 +79,7 @@ html, body {
   background-color: var(--frame-bg);
   border-radius: 36px;
   padding: 16px 20px 24px 20px;
-  box-shadow: 0 25px 60px -15px rgba(17, 24, 39, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
@@ -337,9 +339,9 @@ html, body {
   letter-spacing: 0.03em;
 }
 
-.stat-chip-lavender {
-  background-color: var(--accent-lavender);
-  color: #4338ca;
+.stat-chip-slate {
+  background-color: var(--accent-slate);
+  color: #1e293b;
 }
 
 .stat-chip-amber {
@@ -509,7 +511,7 @@ html, body {
 }
 
 .fill-normal {
-  background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(90deg, #18181b 0%, #3f3f46 100%);
 }
 
 .hero-actions-row {
@@ -555,7 +557,7 @@ html, body {
   color: #b91c1c;
 }
 
-/* Dual Cutout Controls di pojok kanan atas Hero (seperti referensi) */
+/* Dual Cutout Controls di pojok kanan atas Hero */
 .hero-top-cutout-controls {
   position: absolute;
   top: 14px;
@@ -712,9 +714,9 @@ html, body {
   color: #18181b;
 }
 
-.blob-lavender {
-  background-color: var(--accent-lavender);
-  color: #4338ca;
+.blob-slate {
+  background-color: var(--accent-slate);
+  color: #334155;
 }
 
 .blob-corner-icon {
@@ -727,7 +729,7 @@ html, body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
-  padding-right: 48px; /* Ruang agar tidak tertimpa corner blob */
+  padding-right: 48px;
 }
 
 .card-kicker-label {
@@ -939,7 +941,7 @@ html, body {
 }
 
 /* ==========================================================================
-   7. Kolom Kanan (Sidebar Summary, Tilted Card, CTA Gradient)
+   7. Kolom Kanan: Input Tambah Tugas di Atas, Tilted Card, & Summary
    ========================================================================== */
 .dashboard-column-right {
   display: flex;
@@ -947,85 +949,73 @@ html, body {
   gap: 22px;
 }
 
-/* Panel Ringkasan per Mata Kuliah */
-.sidebar-summary-card {
+/* 1. Card Input Tambah Tugas Baru di Bagian Atas */
+.task-add-card-top {
   background-color: #ffffff;
   border: 1.75px solid var(--border-dark);
   border-radius: 24px;
   padding: 22px 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
-.summary-card-header {
+.add-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f4f4f5;
 }
 
-.summary-card-title {
-  font-size: 1.05rem;
+.add-card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-card-heading {
+  font-size: 1.15rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--text-primary);
   margin: 0;
 }
 
-.summary-course-count {
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 2px 8px;
+.add-card-badge-priority {
+  font-size: 0.675rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  background-color: var(--accent-lime);
+  color: #18181b;
+  padding: 3px 8px;
   border-radius: 9999px;
-  background-color: #f4f4f5;
-  color: var(--text-muted);
+  border: 1px solid #18181b;
 }
 
-.course-progress-list {
+.add-task-direct-form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
-.course-progress-item {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.form-group-compact {
+  gap: 4px;
 }
 
-.course-progress-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.8rem;
+.add-task-submit-row {
+  margin-top: 8px;
 }
 
-.course-progress-name {
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.course-progress-stats {
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.progress-bar-track {
+.btn-submit-task-full {
   width: 100%;
-  height: 8px;
-  background-color: #f4f4f5;
-  border-radius: 9999px;
-  overflow: hidden;
-  border: 1px solid var(--border-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 20px;
 }
 
-.progress-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
-  border-radius: 9999px;
-  transition: width 0.3s ease-out;
-}
-
-/* Kartu Overlay Putih yang Dimiringkan (Tilted 3 Deg) */
+/* 2. Kartu Overlay Putih yang Dimiringkan (Tilted 3 Deg) */
 .tilted-overlay-card {
   background-color: #ffffff;
   border: 1.75px solid var(--border-dark);
@@ -1054,7 +1044,7 @@ html, body {
   font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.05em;
-  color: #4f46e5;
+  color: #18181b;
   text-transform: uppercase;
 }
 
@@ -1147,7 +1137,7 @@ html, body {
   gap: 6px;
   background: transparent;
   border: none;
-  color: #4f46e5;
+  color: #18181b;
   font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
@@ -1160,154 +1150,87 @@ html, body {
   text-decoration: underline;
 }
 
-/* Kartu CTA Gradien Ungu */
-.cta-gradient-card {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+/* 3. Panel Ringkasan per Mata Kuliah */
+.sidebar-summary-card {
+  background-color: #ffffff;
   border: 1.75px solid var(--border-dark);
   border-radius: 24px;
-  padding: 24px 26px;
-  color: #ffffff;
-  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.25);
+  padding: 22px 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
-.cta-card-badge {
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: #c7d2fe;
-}
-
-.cta-card-title {
-  font-size: 1.25rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: #ffffff;
-  margin: 4px 0 6px 0;
-}
-
-.cta-card-desc {
-  font-size: 0.825rem;
-  color: #e0e7ff;
-  margin: 0 0 16px 0;
-  line-height: 1.4;
-}
-
-.btn-pill-cta-white {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background-color: #ffffff;
-  color: #18181b;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 9999px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.15s ease, background-color 0.15s ease;
-}
-
-.btn-pill-cta-white:hover {
-  background-color: #f4f4f5;
-  transform: translateY(-1px);
-}
-
-/* ==========================================================================
-   8. Modal Dialog Tambah Tugas (Accessible)
-   ========================================================================== */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(17, 24, 39, 0.65);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 20px;
-}
-
-.modal-dialog-card {
-  background-color: #ffffff;
-  border: 2px solid var(--border-dark);
-  border-radius: 28px;
-  width: 100%;
-  max-width: 520px;
-  padding: 30px;
-  position: relative;
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.35);
-  animation: modalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes modalPop {
-  0% { transform: scale(0.95); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-.modal-header-row {
+.summary-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 22px;
+  margin-bottom: 16px;
 }
 
-.modal-title-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.modal-badge-lime {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: var(--accent-lime);
-}
-
-.modal-title-text {
-  font-size: 1.35rem;
+.summary-card-title {
+  font-size: 1.05rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--text-primary);
   margin: 0;
 }
 
-.btn-modal-close {
-  background: transparent;
-  border: 1.5px solid var(--border-muted);
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: var(--text-secondary);
-  transition: all 0.15s ease;
-}
-
-.btn-modal-close:hover {
+.summary-course-count {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 9999px;
   background-color: #f4f4f5;
-  color: var(--text-primary);
-  border-color: var(--border-dark);
+  color: var(--text-muted);
 }
 
-.modal-form {
+.course-progress-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
-.modal-actions-row {
+.course-progress-item {
   display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 10px;
+  flex-direction: column;
+  gap: 6px;
 }
 
-/* Input Form Neo */
+.course-progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.course-progress-name {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.course-progress-stats {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 8px;
+  background-color: #f4f4f5;
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 1px solid var(--border-muted);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  border-radius: 9999px;
+  transition: width 0.3s ease-out;
+}
+
+/* ==========================================================================
+   8. Form Inputs Neo & Global Buttons
+   ========================================================================== */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -1338,13 +1261,13 @@ html, body {
 
 .neo-input:focus {
   outline: none;
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+  border-color: #18181b;
+  box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.15);
 }
 
 .neo-textarea {
   resize: vertical;
-  min-height: 75px;
+  min-height: 65px;
 }
 
 .form-error-alert {
@@ -1393,11 +1316,11 @@ html, body {
 }
 
 /* ==========================================================================
-   9. Halaman Mata Kuliah (Courses Layout)
+   9. Halaman Mata Kuliah (Courses Layout Spacing)
    ========================================================================== */
 .courses-layout-grid {
   display: grid;
-  grid-template-columns: 1fr 1.75fr;
+  grid-template-columns: 1fr 1.65fr;
   gap: 32px;
   align-items: start;
 }
@@ -1407,14 +1330,34 @@ html, body {
   background-color: #ffffff;
   border: 1.75px solid var(--border-dark);
   border-radius: 24px;
-  padding: 24px;
+  padding: 26px;
   overflow: hidden;
 }
 
-.form-row-grid {
+.course-form-padded {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group-spaced {
+  margin-bottom: 2px;
+}
+
+.form-row-grid-spaced {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: 16px;
+}
+
+.course-form-submit-row {
+  margin-top: 18px;
+}
+
+.btn-submit-course {
+  width: 100%;
+  padding: 12px 22px;
+  font-size: 0.9rem;
 }
 
 .courses-grid-cards {
@@ -1446,9 +1389,9 @@ html, body {
   font-weight: 800;
   padding: 2px 8px;
   border-radius: 9999px;
-  background-color: var(--accent-lavender);
-  color: #4338ca;
-  border: 1px solid #c7d2fe;
+  background-color: var(--accent-slate);
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
 }
 
 .course-name-title {
@@ -1495,7 +1438,7 @@ html, body {
   padding: 36px 32px;
   width: 100%;
   max-width: 440px;
-  box-shadow: 0 20px 45px -10px rgba(17, 24, 39, 0.15);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6);
   overflow: hidden;
 }
 
@@ -1564,7 +1507,7 @@ html, body {
 
 .demo-chip-label {
   font-weight: 800;
-  color: #4f46e5;
+  color: #18181b;
   text-transform: uppercase;
 }
 
@@ -1692,7 +1635,7 @@ html, body {
   .hero-meta-row {
     flex-wrap: wrap;
     gap: 6px;
-    padding-right: 64px; /* Ruang agar tidak tertimpa cutout */
+    padding-right: 64px;
   }
 
   .hero-task-title {
@@ -1715,7 +1658,7 @@ html, body {
     grid-template-columns: 1fr;
   }
 
-  .form-row-grid {
+  .form-row-grid-spaced {
     grid-template-columns: 1fr;
   }
 

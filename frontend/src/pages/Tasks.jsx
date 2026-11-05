@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import api from "../api.js";
 import { useAuth } from "../AuthContext.jsx";
 import Navbar from "../components/Navbar.jsx";
 import TaskCard, { formatDuration } from "../components/TaskCard.jsx";
-import TaskModal from "../components/TaskModal.jsx";
 
 /**
  * Format deadline tanggal ramah pembaca
@@ -21,29 +20,26 @@ function formatDeadlineShort(deadline) {
 }
 
 /**
- * Halaman Utama Daftar Tugas (Redesain v2 Neo-Grotesk).
- * Mengusung struktur layout visual setara referensi:
- * - Bingkai luar perangkat dengan navbar terintegrasi & active notch
- * - Panel putih terang di dalam bingkai
- * - Header sapaan besar & 4 chip statistik pastel ber-outline
- * - Grid 2 kolom:
- *    Kiri: Hero Card "Prioritas Utama", filter tabs, dan grid 2 kolom kartu tugas
- *    Kanan: Ringkasan per mata kuliah, Tilted card (3 derajat), dan CTA gradient button
- * - Form tambah tugas berada di dalam dialog/modal aksesibel
+ * Halaman Utama Daftar Tugas:
+ * - Latar kanvas hitam / dark sesuai estetika perangkat modern
+ * - Header sapaan besar & chip statistik ber-outline
+ * - Input tambah tugas dimuat langsung di bagian atas kolom kanan agar langsung dapat diakses
+ * - Hero Card "Prioritas Utama" di kolom kiri atas
+ * - Tab filter pill & grid 2 kolom kartu tugas
+ * - Seluruh ikon adalah pure SVG (zero emoticon/emoji)
  */
 export default function Tasks() {
   const { user } = useAuth();
   const [tasks, setTasks] = useState([]);
   const [courses, setCourses] = useState([]);
 
-  // State form modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModalBtnRef = useRef(null);
+  // Form input tambah tugas langsung
   const [courseId, setCourseId] = useState("");
   const [judul, setJudul] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
   const [deadline, setDeadline] = useState("");
   const [formError, setFormError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // State filter tab (Semua, Mendekati, Normal, Terlambat, Selesai)
   const [activeFilter, setActiveFilter] = useState("Semua");
@@ -103,15 +99,17 @@ export default function Tasks() {
       setFormError("Pilih mata kuliah terlebih dahulu.");
       return;
     }
+    setIsSubmitting(true);
     try {
       await api.post("/tasks", { mata_kuliah_id: courseId, judul, deskripsi, deadline });
       setJudul("");
       setDeskripsi("");
       setDeadline("");
-      setIsModalOpen(false);
       await loadTasks();
     } catch (err) {
       setFormError(err.response?.data?.error || "Gagal menambahkan tugas.");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -187,7 +185,7 @@ export default function Tasks() {
             </div>
 
             <div className="stat-chips-row" aria-label="Ringkasan Statistik Tugas">
-              <div className="stat-chip stat-chip-lavender">
+              <div className="stat-chip stat-chip-slate">
                 <div className="stat-chip-corner-blob" aria-hidden="true" />
                 <svg className="stat-chip-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
@@ -365,7 +363,7 @@ export default function Tasks() {
                       </div>
                     </div>
 
-                    {/* Dual Cutout Pill di pojok kanan atas Hero (Bell + Dots) seperti referensi */}
+                    {/* Dual Cutout Controls di pojok kanan atas Hero (seperti referensi) */}
                     <div className="hero-top-cutout-controls" aria-hidden="true">
                       <span className="cutout-control-btn cutout-bell">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -418,7 +416,7 @@ export default function Tasks() {
                 {filteredTasks.length === 0 ? (
                   <div className="empty-tasks-box">
                     <p className="empty-box-title">Tidak ada tugas untuk filter "{activeFilter}".</p>
-                    <p className="empty-box-sub">Gunakan tombol "Tambah Tugas Baru" untuk menambahkan tugas.</p>
+                    <p className="empty-box-sub">Gunakan formulir tambah tugas di sebelah kanan untuk menambahkan tugas baru.</p>
                   </div>
                 ) : (
                   <div className="task-cards-grid-2col">
@@ -436,46 +434,114 @@ export default function Tasks() {
             </div>
 
             {/* ================= KOLOM KANAN ================= */}
-            <aside className="dashboard-column-right" aria-label="Informasi dan Aksi Pendukung">
-              {/* a. Panel "Ringkasan per Mata Kuliah" */}
-              <div className="sidebar-summary-card">
-                <div className="summary-card-header">
-                  <h3 className="summary-card-title">Ringkasan per Mata Kuliah</h3>
-                  <span className="summary-course-count">{courses.length} matkul</span>
+            <aside className="dashboard-column-right" aria-label="Formulir Input dan Informasi Pendukung">
+              {/* 1. INPUT TAMBAH TUGAS LANGSUNG DI ATAS (Sesuai Permintaan User) */}
+              <section className="task-add-card-top" aria-label="Tambah Tugas Baru">
+                <div className="add-card-header">
+                  <div className="add-card-title-group">
+                    <span className="brand-dot-lime" aria-hidden="true" />
+                    <h3 className="add-card-heading">Tambah Tugas Baru</h3>
+                  </div>
+                  <span className="add-card-badge-priority">INPUT UTAMA</span>
                 </div>
 
-                <div className="course-progress-list">
-                  {courseSummaries.length === 0 ? (
-                    <p className="empty-summary-text">Belum ada mata kuliah yang terdaftar.</p>
-                  ) : (
-                    courseSummaries.map((c) => (
-                      <div key={c.id} className="course-progress-item">
-                        <div className="course-progress-info">
-                          <span className="course-progress-name">{c.name}</span>
-                          <span className="course-progress-stats">
-                            {c.selesai}/{c.total} selesai ({c.percent}%)
-                          </span>
-                        </div>
-                        <div
-                          className="progress-bar-track"
-                          role="progressbar"
-                          aria-valuenow={c.percent}
-                          aria-valuemin="0"
-                          aria-valuemax="100"
-                          aria-label={`Progres ${c.name}`}
-                        >
-                          <div
-                            className="progress-bar-fill"
-                            style={{ width: `${c.percent}%` }}
-                          />
-                        </div>
-                      </div>
-                    ))
+                <form onSubmit={handleCreateTask} className="neo-form add-task-direct-form">
+                  <div className="form-group form-group-compact">
+                    <label htmlFor="top-task-course" className="form-label">
+                      Mata Kuliah <span className="required-star">*</span>
+                    </label>
+                    <select
+                      id="top-task-course"
+                      value={courseId}
+                      onChange={(e) => setCourseId(e.target.value)}
+                      required
+                      className="neo-input"
+                    >
+                      <option value="">-- Pilih Mata Kuliah --</option>
+                      {courses.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name} {c.kode ? `(${c.kode})` : ""}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group form-group-compact">
+                    <label htmlFor="top-task-title" className="form-label">
+                      Judul Tugas <span className="required-star">*</span>
+                    </label>
+                    <input
+                      id="top-task-title"
+                      type="text"
+                      placeholder="Contoh: Lab 5: B+ Tree Indexing"
+                      value={judul}
+                      onChange={(e) => setJudul(e.target.value)}
+                      required
+                      className="neo-input"
+                    />
+                  </div>
+
+                  <div className="form-group form-group-compact">
+                    <label htmlFor="top-task-deadline" className="form-label">
+                      Batas Pengumpulan (WIB) <span className="required-star">*</span>
+                    </label>
+                    <input
+                      id="top-task-deadline"
+                      type="datetime-local"
+                      value={deadline}
+                      onChange={(e) => setDeadline(e.target.value)}
+                      required
+                      className="neo-input"
+                    />
+                  </div>
+
+                  <div className="form-group form-group-compact">
+                    <label htmlFor="top-task-desc" className="form-label">
+                      Catatan / Deskripsi (opsional)
+                    </label>
+                    <textarea
+                      id="top-task-desc"
+                      placeholder="Catatan pengerjaan atau referensi..."
+                      value={deskripsi}
+                      onChange={(e) => setDeskripsi(e.target.value)}
+                      rows={2}
+                      className="neo-input neo-textarea"
+                    />
+                  </div>
+
+                  {formError && (
+                    <p className="form-error-alert" role="alert">
+                      {formError}
+                    </p>
                   )}
-                </div>
-              </div>
 
-              {/* b. Kartu Putih Tilted 3 Derajat (Overlay Card) */}
+                  <div className="add-task-submit-row">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="btn-pill-primary btn-submit-task-full"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                      </svg>
+                      <span>{isSubmitting ? "Menyimpan..." : "Simpan Tugas"}</span>
+                    </button>
+                  </div>
+                </form>
+              </section>
+
+              {/* 2. Kartu Putih Tilted 3 Derajat (Overlay Card) */}
               <div className="tilted-overlay-card" aria-label="Deadline Terdekat Berikutnya">
                 <div className="tilted-card-header">
                   <div className="tilted-header-left">
@@ -525,60 +591,47 @@ export default function Tasks() {
                 </div>
               </div>
 
-              {/* c. Kartu CTA Gradien Ungu "Tambah Tugas Baru" */}
-              <div className="cta-gradient-card">
-                <div className="cta-card-content">
-                  <span className="cta-card-badge">MANAJEMEN WAKTU</span>
-                  <h3 className="cta-card-title">Kelola Jadwal Belajarmu</h3>
-                  <p className="cta-card-desc">
-                    Tenggat waktu semakin dekat? Tambah tugas baru sekarang dan pantau dengan rapi.
-                  </p>
-                  <button
-                    type="button"
-                    ref={openModalBtnRef}
-                    className="btn-pill-cta-white"
-                    onClick={() => setIsModalOpen(true)}
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                    >
-                      <line x1="12" y1="5" x2="12" y2="19" />
-                      <line x1="5" y1="12" x2="19" y2="12" />
-                    </svg>
-                    <span>Tambah Tugas Baru</span>
-                  </button>
+              {/* 3. Panel "Ringkasan per Mata Kuliah" */}
+              <div className="sidebar-summary-card">
+                <div className="summary-card-header">
+                  <h3 className="summary-card-title">Ringkasan per Mata Kuliah</h3>
+                  <span className="summary-course-count">{courses.length} matkul</span>
+                </div>
+
+                <div className="course-progress-list">
+                  {courseSummaries.length === 0 ? (
+                    <p className="empty-summary-text">Belum ada mata kuliah yang terdaftar.</p>
+                  ) : (
+                    courseSummaries.map((c) => (
+                      <div key={c.id} className="course-progress-item">
+                        <div className="course-progress-info">
+                          <span className="course-progress-name">{c.name}</span>
+                          <span className="course-progress-stats">
+                            {c.selesai}/{c.total} selesai ({c.percent}%)
+                          </span>
+                        </div>
+                        <div
+                          className="progress-bar-track"
+                          role="progressbar"
+                          aria-valuenow={c.percent}
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                          aria-label={`Progres ${c.name}`}
+                        >
+                          <div
+                            className="progress-bar-fill"
+                            style={{ width: `${c.percent}%` }}
+                          />
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             </aside>
           </div>
         </main>
       </div>
-
-      {/* Accessible Task Modal */}
-      <TaskModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        triggerRef={openModalBtnRef}
-        courses={courses}
-        courseId={courseId}
-        setCourseId={setCourseId}
-        judul={judul}
-        setJudul={setJudul}
-        deskripsi={deskripsi}
-        setDeskripsi={setDeskripsi}
-        deadline={deadline}
-        setDeadline={setDeadline}
-        error={formError}
-        onSubmit={handleCreateTask}
-      />
     </div>
   );
 }

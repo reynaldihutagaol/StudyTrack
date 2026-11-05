@@ -3,8 +3,9 @@ import api from "../api.js";
 import Navbar from "../components/Navbar.jsx";
 
 /**
- * Halaman Mata Kuliah (v2):
- * Menampilkan daftar mata kuliah dan form tambah mata kuliah dalam bingkai perangkat StudyTrack yang konsisten.
+ * Halaman Mata Kuliah (v2 Refined):
+ * Menampilkan formulir penambahan mata kuliah dan daftar mata kuliah terdaftar
+ * dalam bingkai perangkat StudyTrack yang berjarak lega dan proporsional.
  */
 export default function Courses() {
   const [courses, setCourses] = useState([]);
@@ -64,9 +65,20 @@ export default function Courses() {
             </div>
 
             <div className="stat-chips-row" aria-label="Statistik Mata Kuliah">
-              <div className="stat-chip stat-chip-lavender">
+              <div className="stat-chip stat-chip-slate">
                 <div className="stat-chip-corner-blob" aria-hidden="true" />
-                <svg className="stat-chip-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <svg
+                  className="stat-chip-svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
                   <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
                 </svg>
                 <div className="stat-chip-content">
@@ -78,15 +90,15 @@ export default function Courses() {
           </section>
 
           <div className="courses-layout-grid">
-            {/* Form Tambah Mata Kuliah */}
+            {/* Form Tambah Mata Kuliah dengan Spacing Lega */}
             <section className="course-form-card" aria-label="Form Tambah Mata Kuliah">
               <div className="form-header-row">
                 <div className="card-corner-blob blob-lime" aria-hidden="true" />
                 <h2 className="section-subtitle-heading">Tambah Mata Kuliah</h2>
               </div>
 
-              <form onSubmit={handleSubmit} className="neo-form">
-                <div className="form-group">
+              <form onSubmit={handleSubmit} className="neo-form course-form-padded">
+                <div className="form-group form-group-spaced">
                   <label htmlFor="course-name" className="form-label">
                     Nama Mata Kuliah <span className="required-star">*</span>
                   </label>
@@ -101,7 +113,7 @@ export default function Courses() {
                   />
                 </div>
 
-                <div className="form-row-grid">
+                <div className="form-row-grid form-row-grid-spaced">
                   <div className="form-group">
                     <label htmlFor="course-code" className="form-label">
                       Kode Mata Kuliah
@@ -133,9 +145,11 @@ export default function Courses() {
 
                 {error && <p className="form-error-alert" role="alert">{error}</p>}
 
-                <button type="submit" className="btn-pill-primary">
-                  Tambah Mata Kuliah
-                </button>
+                <div className="course-form-submit-row">
+                  <button type="submit" className="btn-pill-primary btn-submit-course">
+                    Tambah Mata Kuliah
+                  </button>
+                </div>
               </form>
             </section>
 
@@ -149,13 +163,13 @@ export default function Courses() {
               {courses.length === 0 ? (
                 <div className="empty-tasks-box">
                   <p className="empty-box-title">Belum ada mata kuliah yang terdaftar.</p>
-                  <p className="empty-box-sub">Gunakan formulir di samping untuk menambahkan mata kuliah pertamamu.</p>
+                  <p className="empty-box-sub">Gunakan formulir di sebelah kiri untuk menambahkan mata kuliah pertamamu.</p>
                 </div>
               ) : (
                 <div className="courses-grid-cards">
                   {courses.map((c) => (
                     <article className="course-card-v2" key={c.id}>
-                      <div className="card-corner-blob blob-lavender" aria-hidden="true">
+                      <div className="card-corner-blob blob-slate" aria-hidden="true">
                         <svg
                           width="16"
                           height="16"
@@ -165,6 +179,7 @@ export default function Courses() {
                           strokeWidth="2.2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
+                          aria-hidden="true"
                         >
                           <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
                         </svg>
