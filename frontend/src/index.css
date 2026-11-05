@@ -1,370 +1,1313 @@
 /* ==========================================================================
-   StudyTrack Modern Neo-Grotesk Design System
-   Visual language: Soft lavender canvas, structured dark-outlined panels,
-   dark floating pill navbar, pastel stat chips, crisp corner lime accents.
+   StudyTrack - Design System Tokens & Neo-Grotesk Stylesheet (v2)
+   Inspirasi: Layout berbingkai perangkat gelap dengan panel terang membulat,
+   tab dengan active notch, aksen blob kurva lime, chip statistik pastel ber-outline,
+   hero priority card, 2-kolom grid, sidebar summary + tilted card + CTA gradient.
    ========================================================================== */
 
 :root {
-  --font-family-base: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  /* Palette Primitives */
-  --color-page-bg: #ede9fe;
-  --color-panel-bg: #ffffff;
-  --color-panel-muted: #f8fafc;
-  --color-ink-primary: #18181b;
-  --color-ink-secondary: #475569;
-  --color-ink-muted: #64748b;
-  --color-ink-faint: #94a3b8;
+  /* Token Warna Utama */
+  --bg-canvas: #ede9fe;            /* Lavender sangat lembut */
+  --frame-bg: #111827;             /* Bingkai perangkat gelap (slate-900) */
+  --panel-bg: #ffffff;             /* Panel terang utama */
+  --border-dark: #18181b;          /* Garis outline tegas 1.75px */
+  --border-muted: #e4e4e7;
+  
+  /* Aksen Berwarna */
+  --accent-lime: #bef264;          /* Lime / kuning-hijau segar */
+  --accent-lavender: #ede9fe;      /* Lavender pastel */
+  --accent-amber: #fef3c7;         /* Kuning pastel */
+  --accent-red: #fee2e2;           /* Merah pastel */
+  --accent-green: #dcfce7;         /* Hijau pastel */
 
-  /* Accent & Outlines */
-  --outline-dark: #18181b;
-  --outline-subtle: #e2e8f0;
-  --accent-lime: #bef264;
-  --accent-lime-tint: #f7fee7;
-  --accent-lime-dark: #3f6212;
+  /* Semantik Urgensi */
+  --color-urgency-approaching-text: #9a3412;
+  --color-urgency-approaching-border: #ea580c;
+  --color-urgency-approaching-bg: #fff7ed;
 
-  /* Semantic Urgency Colors */
-  --urgent-mendekati-bg: #ffedd5;
-  --urgent-mendekati-fg: #9a3412;
-  --urgent-mendekati-border: #ea580c;
+  --color-urgency-overdue-text: #991b1b;
+  --color-urgency-overdue-border: #dc2626;
+  --color-urgency-overdue-bg: #fef2f2;
 
-  --urgent-overdue-bg: #fee2e2;
-  --urgent-overdue-fg: #991b1b;
-  --urgent-overdue-border: #dc2626;
+  --color-status-done-text: #166534;
+  --color-status-done-border: #16a34a;
+  --color-status-done-bg: #f0fdf4;
 
-  --status-selesai-bg: #dcfce7;
-  --status-selesai-fg: #166534;
-  --status-selesai-border: #86efac;
-
-  --status-belum-bg: #f1f5f9;
-  --status-belum-fg: #475569;
-  --status-belum-border: #cbd5e1;
-
-  /* Radii */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
-  --radius-pill: 9999px;
-
-  /* Elevation Shadows */
-  --shadow-neo-sm: 2px 2px 0px #18181b;
-  --shadow-neo-md: 3px 3px 0px #18181b;
-  --shadow-neo-lg: 4px 4px 0px #18181b;
-  --shadow-ambient: 0 16px 40px -12px rgba(109, 40, 217, 0.12), 0 4px 12px rgba(24, 24, 27, 0.04);
+  /* Teks */
+  --text-primary: #18181b;
+  --text-secondary: #52525b;
+  --text-muted: #71717a;
 }
 
-/* Base Reset */
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
-body {
+html, body {
   margin: 0;
-  font-family: var(--font-family-base);
-  background-color: var(--color-page-bg);
-  color: var(--color-ink-primary);
+  padding: 0;
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   1. Bingkai Luar Perangkat (Device Canvas & Frame)
+   ========================================================================== */
+.device-canvas {
   min-height: 100vh;
+  background-color: var(--bg-canvas);
+  padding: 24px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-x: hidden;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+.device-frame {
+  width: 100%;
+  max-width: 1360px;
+  background-color: var(--frame-bg);
+  border-radius: 36px;
+  padding: 16px 20px 24px 20px;
+  box-shadow: 0 25px 60px -15px rgba(17, 24, 39, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
 }
 
-/* Outer Page Wrapper & App Frame */
-.page-wrapper {
-  max-width: 980px;
-  margin: 24px auto 48px auto;
-  padding: 0 16px;
-}
-
-/* Floating Dark Pill Navbar */
-.navbar-container {
-  margin-bottom: 20px;
-}
-
-.navbar-pill {
-  background: var(--outline-dark);
-  color: #ffffff;
-  border-radius: var(--radius-pill);
-  padding: 8px 18px;
+/* ==========================================================================
+   2. Navbar Perangkat & Active Tab Notch
+   ========================================================================== */
+.device-navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  border: 1.5px solid var(--outline-dark);
-  box-shadow: 0 4px 16px -2px rgba(24, 24, 27, 0.15);
+  padding: 6px 14px 18px 14px;
+  color: #ffffff;
+  position: relative;
 }
 
-.navbar-brand {
+.device-brand {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 1.125rem;
-  font-weight: 800;
-  letter-spacing: -0.025em;
+  gap: 10px;
+  text-decoration: none;
   color: #ffffff;
-  padding: 4px 6px;
 }
 
-.brand-dot {
-  width: 9px;
-  height: 9px;
-  background-color: var(--accent-lime);
+.brand-dot-lime {
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  display: inline-block;
-  box-shadow: 0 0 8px rgba(190, 242, 100, 0.6);
-}
-
-.navbar-links {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.nav-pill-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
-  border-radius: var(--radius-pill);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #a1a1aa;
-  transition: all 0.15s ease;
-}
-
-.nav-pill-item:hover {
-  color: #ffffff;
-}
-
-.nav-pill-item.active {
-  background: #27272a;
-  color: #ffffff;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.nav-icon {
+  background-color: var(--accent-lime);
+  box-shadow: 0 0 12px rgba(190, 242, 100, 0.6);
   flex-shrink: 0;
 }
 
-.navbar-user {
+.brand-text {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+
+.device-nav-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #1f2937;
+  padding: 4px 6px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+}
+
+.device-tab-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  color: #9ca3af;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  position: relative;
+  transition: all 0.15s ease-out;
+}
+
+.device-tab-item:hover {
+  color: #f3f4f6;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.device-tab-item.active {
+  background-color: #111827;
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.tab-icon {
+  flex-shrink: 0;
+}
+
+/* Notch kecil di bawah tab aktif yang menyambung ke panel putih */
+.tab-active-notch {
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+}
+
+.device-user-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-profile-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #1f2937;
+  padding: 4px 14px 4px 4px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.user-avatar-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: var(--accent-lime);
+  color: #18181b;
+  font-size: 0.85rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-info-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.user-display-name {
+  font-size: 0.825rem;
+  font-weight: 700;
+  color: #f3f4f6;
+}
+
+.user-display-email {
+  font-size: 0.725rem;
+  color: #9ca3af;
+}
+
+.btn-pill-logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: transparent;
+  color: #d1d5db;
+  border: 1.5px solid #374151;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-pill-logout:hover {
+  background-color: #1f2937;
+  border-color: #4b5563;
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   3. Panel Konten Utama (App Panel)
+   ========================================================================== */
+.app-panel {
+  background-color: var(--panel-bg);
+  border-radius: 28px;
+  border: 1.75px solid var(--border-dark);
+  padding: 32px 36px 40px 36px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
+  overflow-x: hidden;
+}
+
+/* Header Panel & Stat Chips */
+.panel-header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.header-greeting-block {
+  max-width: 580px;
+}
+
+.greeting-main-heading {
+  font-size: 2.35rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  margin: 0 0 6px 0;
+  line-height: 1.15;
+}
+
+.greeting-sub-text {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.highlight-text {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.stat-chips-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.stat-chip {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  border-radius: 16px;
+  border: 1.75px solid var(--border-dark);
+  min-width: 115px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.stat-chip-corner-blob {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.15;
+}
+
+.stat-chip-svg {
+  flex-shrink: 0;
+}
+
+.stat-chip-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-chip-number {
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.stat-chip-name {
+  font-size: 0.725rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.stat-chip-lavender {
+  background-color: var(--accent-lavender);
+  color: #4338ca;
+}
+
+.stat-chip-amber {
+  background-color: var(--accent-amber);
+  color: #9a3412;
+}
+
+.stat-chip-red {
+  background-color: var(--accent-red);
+  color: #991b1b;
+}
+
+.stat-chip-green {
+  background-color: var(--accent-green);
+  color: #166534;
+}
+
+/* ==========================================================================
+   4. Grid Dua Kolom (62% Kiri / 38% Kanan)
+   ========================================================================== */
+.dashboard-grid-layout {
+  display: grid;
+  grid-template-columns: 1.62fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.section-subtitle-heading {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0 0 14px 0;
+}
+
+/* ==========================================================================
+   5. Kolom Kiri: Hero Card "Prioritas Utama"
+   ========================================================================== */
+.hero-task-card {
+  position: relative;
+  background-color: #ffffff;
+  border: 1.75px solid var(--border-dark);
+  border-radius: 24px;
+  padding: 24px;
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  overflow: hidden;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  max-width: 100%;
+}
+
+.hero-blob-artwork {
+  position: relative;
+  width: 104px;
+  height: 104px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-blob-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-center-icon {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-content-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.hero-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.hero-category-label {
+  font-size: 0.725rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.hero-urgent-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 9px;
+  border-radius: 9999px;
+  background-color: var(--accent-amber);
+  color: #9a3412;
+  font-size: 0.725rem;
+  font-weight: 700;
+  border: 1px solid #f59e0b;
+}
+
+.hero-task-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0 0 10px 0;
+  line-height: 1.25;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.hero-info-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.hero-course-tag, .hero-deadline-tag, .hero-remaining-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background-color: #fafafa;
+  border: 1px solid var(--border-muted);
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.hero-remaining-tag {
+  background-color: #fff7ed;
+  border-color: #fed7aa;
+  color: #c2410c;
+  font-weight: 700;
+}
+
+.hero-urgency-track-bar {
+  width: 100%;
+  max-width: 320px;
+  height: 6px;
+  background-color: #f4f4f5;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  border: 1px solid #e4e4e7;
+}
+
+.hero-urgency-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+.fill-urgent {
+  background: linear-gradient(90deg, #ea580c 0%, #f97316 100%);
+}
+
+.fill-normal {
+  background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+}
+
+.hero-actions-row {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.user-profile-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: #27272a;
-  padding: 4px 12px 4px 5px;
-  border-radius: var(--radius-pill);
-  font-size: 0.825rem;
-  font-weight: 600;
-  color: #f4f4f5;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.btn-pill-hero-primary {
+  background-color: #18181b;
+  color: #ffffff;
+  border: none;
+  padding: 9px 22px;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
-.user-avatar-badge {
-  width: 24px;
-  height: 24px;
+.btn-pill-hero-primary:hover {
+  background-color: #27272a;
+  transform: translateY(-1px);
+}
+
+.btn-circle-hero-secondary {
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: var(--accent-lime);
-  color: #18181b;
+  border: 1.5px solid var(--border-dark);
+  background-color: #ffffff;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-.user-name-text {
-  max-width: 140px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.btn-circle-hero-secondary:hover {
+  background-color: #fee2e2;
+  border-color: #ef4444;
+  color: #b91c1c;
+}
+
+/* Dual Cutout Controls di pojok kanan atas Hero (seperti referensi) */
+.hero-top-cutout-controls {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #ffffff;
+  padding: 4px;
+  border-radius: 9999px;
+  border: 1.5px solid var(--border-dark);
+}
+
+.cutout-control-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #18181b;
+}
+
+.cutout-bell {
+  background-color: var(--accent-lime);
+}
+
+.cutout-dots {
+  background-color: #f4f4f5;
+  color: #71717a;
+}
+
+.hero-empty-state {
+  border: 1.75px dashed var(--border-muted);
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.hero-empty-title {
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.hero-empty-sub {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ==========================================================================
+   6. Kolom Kiri: Filter Tab & Grid Kartu Tugas
+   ========================================================================== */
+.task-filter-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.title-with-count {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.task-badge-total {
+  font-size: 0.775rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  background-color: #f4f4f5;
+  border: 1.25px solid var(--border-muted);
+  color: var(--text-secondary);
+}
+
+.filter-pills-bar {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.filter-pill-btn {
+  background-color: transparent;
+  border: 1.5px solid var(--border-dark);
+  color: var(--text-secondary);
+  padding: 5px 14px;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
   white-space: nowrap;
+  transition: all 0.15s ease;
 }
 
-.btn-nav-logout {
-  background: transparent;
-  color: #cbd5e1;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-pill);
-  padding: 5px 12px;
+.filter-pill-btn:hover {
+  background-color: #f4f4f5;
+  color: var(--text-primary);
+}
+
+.filter-pill-btn.active {
+  background-color: #18181b;
+  color: #ffffff;
+}
+
+.task-cards-grid-2col {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+/* Komponen TaskCard Neo */
+.task-card-neo {
+  position: relative;
+  background-color: #ffffff;
+  border: 1.75px solid var(--border-dark);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  min-height: 220px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.task-card-neo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px -4px rgba(0, 0, 0, 0.06);
+}
+
+/* Blob Melengkung di Sudut Kartu Tugas */
+.card-corner-blob {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 52px;
+  height: 52px;
+  border-bottom-left-radius: 28px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 8px 10px;
+  pointer-events: none;
+}
+
+.blob-lime {
+  background-color: var(--accent-lime);
+  color: #18181b;
+}
+
+.blob-lavender {
+  background-color: var(--accent-lavender);
+  color: #4338ca;
+}
+
+.blob-corner-icon {
+  flex-shrink: 0;
+}
+
+/* Meta Top Kartu */
+.card-top-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-right: 48px; /* Ruang agar tidak tertimpa corner blob */
+}
+
+.card-kicker-label {
+  font-size: 0.725rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+/* Badge Status / Urgensi */
+.status-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+
+.badge-mendekati {
+  background-color: var(--color-urgency-approaching-bg);
+  color: var(--color-urgency-approaching-text);
+  border-color: #fed7aa;
+}
+
+.badge-overdue {
+  background-color: var(--color-urgency-overdue-bg);
+  color: var(--color-urgency-overdue-text);
+  border-color: #fecaca;
+}
+
+.badge-selesai {
+  background-color: var(--color-status-done-bg);
+  color: var(--color-status-done-text);
+  border-color: #bbf7d0;
+}
+
+.badge-normal {
+  background-color: #f4f4f5;
+  color: #52525b;
+  border-color: #e4e4e7;
+}
+
+.badge-dot-gray {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #a1a1aa;
+}
+
+/* Body Kartu */
+.card-body-section {
+  flex: 1;
+  margin-bottom: 16px;
+}
+
+.card-task-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+
+.title-selesai {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.card-course-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background-color: #f8fafc;
+  border: 1px solid var(--border-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.card-desc-text {
+  font-size: 0.825rem;
+  color: var(--text-secondary);
+  margin: 6px 0 0 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Footer Kartu */
+.card-footer-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #f4f4f5;
+  padding-top: 14px;
+  gap: 10px;
+}
+
+.card-deadline-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.deadline-meta-icon {
+  color: var(--text-muted);
+}
+
+.card-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-pill-toggle {
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 0.775rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1.5px solid var(--border-dark);
+}
+
+.btn-complete {
+  background-color: #18181b;
+  color: #ffffff;
+}
+
+.btn-complete:hover {
+  background-color: #27272a;
+}
+
+.btn-undo {
+  background-color: #ffffff;
+  color: var(--text-secondary);
+}
+
+.btn-undo:hover {
+  background-color: #f4f4f5;
+}
+
+.btn-pill-delete {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: transparent;
+  color: #71717a;
+  border: 1px solid transparent;
+  padding: 6px 10px;
+  border-radius: 9999px;
   font-size: 0.775rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
-  font-family: inherit;
 }
 
-.btn-nav-logout:hover {
-  background: #27272a;
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.3);
+.btn-pill-delete:hover {
+  background-color: #fee2e2;
+  color: #b91c1c;
 }
 
-/* Main Content Panel Frame */
-.main-content-panel {
-  background: var(--color-panel-bg);
-  border: 1.75px solid var(--outline-dark);
-  border-radius: var(--radius-xl);
-  padding: 32px 36px;
-  box-shadow: var(--shadow-ambient);
+/* Gaya Kartu Berdasarkan Kategori Urgensi */
+.card-mendekati {
+  border-color: var(--color-urgency-approaching-border);
+  box-shadow: 2px 2px 0px var(--color-urgency-approaching-border);
 }
 
-/* Hero & Greeting Section */
-.dashboard-hero-section {
-  margin-bottom: 28px;
+.card-overdue {
+  border-color: var(--color-urgency-overdue-border);
+  box-shadow: 2px 2px 0px var(--color-urgency-overdue-border);
 }
 
-.hero-greeting-block {
-  margin-bottom: 20px;
+.card-selesai {
+  opacity: 0.85;
+  background-color: #fafbfc;
+  border-color: #cbd5e1;
 }
 
-.hero-greeting-title {
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--color-ink-primary);
-  margin: 0 0 6px 0;
-  line-height: 1.2;
+.empty-tasks-box {
+  border: 1.75px dashed var(--border-muted);
+  border-radius: 20px;
+  padding: 40px 20px;
+  text-align: center;
 }
 
-.hero-greeting-sub {
-  font-size: 0.95rem;
-  color: var(--color-ink-muted);
+.empty-box-title {
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.empty-box-sub {
+  font-size: 0.85rem;
+  color: var(--text-muted);
   margin: 0;
-  line-height: 1.5;
 }
 
-/* Pastel Stat Chips Grid */
-.stat-chips-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+/* ==========================================================================
+   7. Kolom Kanan (Sidebar Summary, Tilted Card, CTA Gradient)
+   ========================================================================== */
+.dashboard-column-right {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
 }
 
-.stat-chip {
+/* Panel Ringkasan per Mata Kuliah */
+.sidebar-summary-card {
+  background-color: #ffffff;
+  border: 1.75px solid var(--border-dark);
+  border-radius: 24px;
+  padding: 22px 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.summary-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.summary-card-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.summary-course-count {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background-color: #f4f4f5;
+  color: var(--text-muted);
+}
+
+.course-progress-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.course-progress-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.course-progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.course-progress-name {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.course-progress-stats {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 8px;
+  background-color: #f4f4f5;
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 1px solid var(--border-muted);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  border-radius: 9999px;
+  transition: width 0.3s ease-out;
+}
+
+/* Kartu Overlay Putih yang Dimiringkan (Tilted 3 Deg) */
+.tilted-overlay-card {
+  background-color: #ffffff;
+  border: 1.75px solid var(--border-dark);
+  border-radius: 24px;
+  padding: 22px 24px;
+  transform: rotate(3deg);
+  transform-origin: top right;
+  box-shadow: 0 14px 30px -8px rgba(17, 24, 39, 0.12);
+  position: relative;
+  z-index: 5;
+  transition: transform 0.2s ease;
+}
+
+.tilted-overlay-card:hover {
+  transform: rotate(1.5deg) scale(1.01);
+}
+
+.tilted-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.tilted-card-tag {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #4f46e5;
+  text-transform: uppercase;
+}
+
+.tilted-card-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 2px 0 0 0;
+}
+
+.tilted-lightning-badge {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: var(--radius-md);
-  border: 1.5px solid var(--outline-dark);
-  box-shadow: var(--shadow-neo-sm);
-  transition: transform 0.15s ease;
+  justify-content: center;
 }
 
-.stat-chip:hover {
-  transform: translateY(-1px);
+.tilted-deadlines-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.stat-chip-active {
-  background-color: #ede9fe;
+.tilted-deadline-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #fafafa;
+  border: 1px solid var(--border-muted);
+  border-radius: 14px;
+  gap: 10px;
 }
 
-.stat-chip-warning {
-  background-color: #fef3c7;
+.tilted-item-left {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
-.stat-chip-danger {
-  background-color: #fee2e2;
+.tilted-item-title {
+  font-size: 0.825rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 170px;
 }
 
-.stat-chip-success {
-  background-color: #dcfce7;
+.tilted-item-course {
+  font-size: 0.725rem;
+  color: var(--text-muted);
 }
 
-.stat-chip-icon {
-  font-size: 1.25rem;
+.tilted-item-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   flex-shrink: 0;
 }
 
-.stat-chip-details {
-  display: flex;
-  flex-direction: column;
-}
-
-.stat-chip-count {
-  font-size: 1.35rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--color-ink-primary);
-  line-height: 1.1;
-  font-variant-numeric: tabular-nums;
-}
-
-.stat-chip-label {
+.tilted-item-date {
   font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.tilted-item-time {
+  font-size: 0.7rem;
   font-weight: 600;
-  color: #334155;
-  margin-top: 2px;
-  white-space: nowrap;
+  color: #ea580c;
 }
 
-/* Neo Form Cards */
-.form-card-neo {
-  background: #ffffff;
-  border: 1.75px solid var(--outline-dark);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  margin-bottom: 32px;
-  box-shadow: var(--shadow-neo-sm);
-  position: relative;
-}
-
-.form-header-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 18px;
-}
-
-.form-badge-pill {
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: var(--radius-pill);
-  background: var(--accent-lime);
-  border: 1.25px solid var(--outline-dark);
-  font-size: 0.725rem;
-  font-weight: 700;
-  color: #18181b;
-  letter-spacing: -0.01em;
-}
-
-.form-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--color-ink-primary);
+.tilted-empty-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
   margin: 0;
 }
 
-.neo-form {
+.tilted-card-footer {
+  margin-top: 14px;
+  border-top: 1px solid #f4f4f5;
+  padding-top: 10px;
+}
+
+.btn-tilted-view-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  color: #4f46e5;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  transition: gap 0.15s ease;
+}
+
+.btn-tilted-view-more:hover {
+  gap: 9px;
+  text-decoration: underline;
+}
+
+/* Kartu CTA Gradien Ungu */
+.cta-gradient-card {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  border: 1.75px solid var(--border-dark);
+  border-radius: 24px;
+  padding: 24px 26px;
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.25);
+}
+
+.cta-card-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #c7d2fe;
+}
+
+.cta-card-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 4px 0 6px 0;
+}
+
+.cta-card-desc {
+  font-size: 0.825rem;
+  color: #e0e7ff;
+  margin: 0 0 16px 0;
+  line-height: 1.4;
+}
+
+.btn-pill-cta-white {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ffffff;
+  color: #18181b;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.btn-pill-cta-white:hover {
+  background-color: #f4f4f5;
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   8. Modal Dialog Tambah Tugas (Accessible)
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(17, 24, 39, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-dialog-card {
+  background-color: #ffffff;
+  border: 2px solid var(--border-dark);
+  border-radius: 28px;
+  width: 100%;
+  max-width: 520px;
+  padding: 30px;
+  position: relative;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.35);
+  animation: modalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPop {
+  0% { transform: scale(0.95); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.modal-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.modal-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-badge-lime {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--accent-lime);
+}
+
+.modal-title-text {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.btn-modal-close {
+  background: transparent;
+  border: 1.5px solid var(--border-muted);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.15s ease;
+}
+
+.btn-modal-close:hover {
+  background-color: #f4f4f5;
+  color: var(--text-primary);
+  border-color: var(--border-dark);
+}
+
+.modal-form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
-.form-row-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+.modal-actions-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
 }
 
-.form-row-grid-3 {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr 1.5fr;
-  gap: 14px;
-}
-
+/* Input Form Neo */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -374,8 +1317,7 @@ a {
 .form-label {
   font-size: 0.825rem;
   font-weight: 700;
-  color: #334155;
-  letter-spacing: -0.01em;
+  color: var(--text-primary);
 }
 
 .required-star {
@@ -383,540 +1325,262 @@ a {
 }
 
 .neo-input {
+  width: 100%;
   padding: 10px 14px;
-  border: 1.5px solid #cbd5e1;
-  border-radius: var(--radius-md);
-  font-size: 0.9rem;
-  font-family: inherit;
-  color: var(--color-ink-primary);
+  border-radius: 12px;
+  border: 1.75px solid var(--border-dark);
   background-color: #ffffff;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.875rem;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .neo-input:focus {
   outline: none;
-  border-color: var(--outline-dark);
-  box-shadow: 0 0 0 2px rgba(24, 24, 27, 0.1);
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
 }
 
 .neo-textarea {
   resize: vertical;
-  min-height: 64px;
+  min-height: 75px;
 }
 
 .form-error-alert {
   padding: 10px 14px;
-  border-radius: var(--radius-md);
-  background: #fee2e2;
+  background-color: #fee2e2;
   border: 1.5px solid #ef4444;
+  border-radius: 12px;
   color: #991b1b;
-  font-size: 0.85rem;
+  font-size: 0.825rem;
   font-weight: 600;
   margin: 0;
 }
 
-.form-actions-row {
-  margin-top: 4px;
-}
-
-/* Pill Buttons */
 .btn-pill-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--outline-dark);
+  background-color: #18181b;
   color: #ffffff;
-  border: 1.5px solid var(--outline-dark);
-  border-radius: var(--radius-pill);
-  padding: 10px 24px;
-  font-size: 0.9rem;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 9999px;
+  font-size: 0.875rem;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.15s ease;
-  font-family: inherit;
-  box-shadow: var(--shadow-neo-sm);
+  transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
 .btn-pill-primary:hover {
-  background: #27272a;
-  transform: translateY(-1px);
+  background-color: #27272a;
 }
 
-.btn-pill-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 16px;
-  border-radius: var(--radius-pill);
-  font-size: 0.825rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  font-family: inherit;
-}
-
-.btn-pill-toggle {
-  background: #ffffff;
-  color: var(--outline-dark);
-  border: 1.5px solid var(--outline-dark);
-}
-
-.btn-pill-toggle:hover {
-  background: var(--outline-dark);
-  color: #ffffff;
-}
-
-.btn-pill-undo {
-  background: #f1f5f9;
-  color: #475569;
-  border: 1.5px solid #cbd5e1;
-}
-
-.btn-pill-undo:hover {
-  background: #e2e8f0;
-  color: var(--outline-dark);
-}
-
-.btn-pill-delete {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 12px;
-  border-radius: var(--radius-pill);
-  background: transparent;
-  color: #64748b;
-  border: 1.5px solid transparent;
-  font-size: 0.825rem;
+.btn-pill-secondary {
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: 1.5px solid var(--border-muted);
+  padding: 10px 20px;
+  border-radius: 9999px;
+  font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
-  font-family: inherit;
 }
 
-.btn-pill-delete:hover {
-  background: #fee2e2;
-  color: #dc2626;
-  border-color: #fecaca;
+.btn-pill-secondary:hover {
+  background-color: #f4f4f5;
+  color: var(--text-primary);
+  border-color: var(--border-dark);
 }
 
-/* Task List Section & Cards */
-.task-list-section {
-  margin-top: 8px;
-}
-
-.section-title-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-.section-heading {
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--color-ink-primary);
-  margin: 0;
-}
-
-.task-count-pill {
-  display: inline-block;
-  padding: 3px 12px;
-  border-radius: var(--radius-pill);
-  background: #f1f5f9;
-  border: 1px solid #cbd5e1;
-  font-size: 0.775rem;
-  font-weight: 700;
-  color: #475569;
-}
-
-.task-cards-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* Modern Neo Task Card */
-.task-card-neo {
-  background: #ffffff;
-  border: 1.75px solid var(--outline-dark);
-  border-radius: var(--radius-lg);
-  padding: 18px 22px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: var(--shadow-neo-sm);
-  transition: transform 0.15s ease, border-color 0.15s ease;
-}
-
-.task-card-neo:hover {
-  transform: translateY(-1px);
-}
-
-/* Corner Decorative Accent (Lime) */
-.card-corner-lime-accent {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 24px;
-  height: 24px;
-  background-color: var(--accent-lime);
-  border-bottom-left-radius: 14px;
-  border-left: 1.5px solid var(--outline-dark);
-  border-bottom: 1.5px solid var(--outline-dark);
-  pointer-events: none;
-}
-
-/* Card Urgency Conditions */
-.task-card-neo.card-mendekati {
-  border-color: var(--urgent-mendekati-border);
-  box-shadow: 2px 2px 0px var(--urgent-mendekati-border);
-}
-
-.task-card-neo.card-overdue {
-  border-color: var(--urgent-overdue-border);
-  box-shadow: 2px 2px 0px var(--urgent-overdue-border);
-}
-
-.task-card-neo.card-selesai {
-  background-color: #fafbfc;
-  opacity: 0.9;
-}
-
-.task-card-neo.card-selesai .task-title {
-  color: #64748b;
-  text-decoration: line-through;
-}
-
-.task-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.task-header {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 6px;
-  padding-right: 20px; /* Space for corner accent */
-}
-
-.task-title {
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  color: var(--color-ink-primary);
-  margin: 0;
-  line-height: 1.35;
-  word-break: break-word;
-}
-
-.task-course-tag {
-  display: inline-block;
-  padding: 1px 8px;
-  border-radius: var(--radius-pill);
-  background: #f1f5f9;
-  border: 1px solid #cbd5e1;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #334155;
-  letter-spacing: -0.01em;
-}
-
-.task-deadline-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.825rem;
-  font-weight: 600;
-  color: var(--color-ink-secondary);
-  margin-top: 4px;
-  font-variant-numeric: tabular-nums;
-}
-
-.meta-icon {
-  color: #64748b;
-  flex-shrink: 0;
-}
-
-.task-description {
-  margin: 8px 0 0 0;
-  font-size: 0.85rem;
-  line-height: 1.5;
-  color: var(--color-ink-muted);
-  word-break: break-word;
-}
-
-/* Badges & Actions Cluster */
-.task-actions-col {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
-  flex-shrink: 0;
-}
-
-.task-badges-cluster {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.badge-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 3px 10px;
-  border-radius: var(--radius-pill);
-  font-size: 0.75rem;
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-.badge-urgent-mendekati {
-  background-color: var(--urgent-mendekati-bg);
-  color: var(--urgent-mendekati-fg);
-  border: 1.25px solid #fdba74;
-}
-
-.badge-urgent-overdue {
-  background-color: var(--urgent-overdue-bg);
-  color: var(--urgent-overdue-fg);
-  border: 1.25px solid #fca5a5;
-}
-
-.badge-status-pill.belum {
-  background-color: var(--status-belum-bg);
-  color: var(--status-belum-fg);
-  border: 1.25px solid #cbd5e1;
-}
-
-.status-dot-neutral {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: #64748b;
-}
-
-.badge-status-pill.selesai {
-  background-color: var(--status-selesai-bg);
-  color: var(--status-selesai-fg);
-  border: 1.25px solid var(--status-selesai-border);
-}
-
-.badge-icon {
-  flex-shrink: 0;
-}
-
-.task-button-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Empty State Card */
-.empty-state-card {
-  text-align: center;
-  padding: 40px 20px;
-  background: #f8fafc;
-  border: 1.5px dashed #cbd5e1;
-  border-radius: var(--radius-lg);
-}
-
-.empty-state-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #334155;
-  margin: 0 0 4px 0;
-}
-
-.empty-state-sub {
-  font-size: 0.85rem;
-  color: #64748b;
-  margin: 0;
-}
-
-/* Courses Grid & Neo Card */
-.courses-grid {
+/* ==========================================================================
+   9. Halaman Mata Kuliah (Courses Layout)
+   ========================================================================== */
+.courses-layout-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: 1fr 1.75fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.course-form-card {
+  position: relative;
+  background-color: #ffffff;
+  border: 1.75px solid var(--border-dark);
+  border-radius: 24px;
+  padding: 24px;
+  overflow: hidden;
+}
+
+.form-row-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 14px;
 }
 
-.course-card-neo {
-  background: #ffffff;
-  border: 1.75px solid var(--outline-dark);
-  border-radius: var(--radius-lg);
-  padding: 18px 20px;
+.courses-grid-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.course-card-v2 {
   position: relative;
+  background-color: #ffffff;
+  border: 1.75px solid var(--border-dark);
+  border-radius: 20px;
+  padding: 20px;
   overflow: hidden;
-  box-shadow: var(--shadow-neo-sm);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 14px;
+  min-height: 150px;
 }
 
-.course-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+.course-top-info {
+  margin-bottom: 12px;
+  padding-right: 48px;
 }
 
-.course-title-group {
-  padding-right: 20px;
-}
-
-.course-title {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--color-ink-primary);
-  margin: 0 0 4px 0;
-  line-height: 1.35;
-}
-
-.course-code-badge {
-  display: inline-block;
-  padding: 1px 7px;
-  border-radius: var(--radius-pill);
-  background: #ede9fe;
-  border: 1px solid #ddd6fe;
+.course-code-pill {
   font-size: 0.725rem;
-  font-weight: 700;
-  color: #6d28d9;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background-color: var(--accent-lavender);
+  color: #4338ca;
+  border: 1px solid #c7d2fe;
 }
 
-.course-dosen-row {
-  display: flex;
+.course-name-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 6px 0 0 0;
+}
+
+.course-dosen-meta {
+  display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.825rem;
-  color: var(--color-ink-secondary);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
 }
 
-.course-footer {
+.course-footer-row {
   display: flex;
   justify-content: flex-end;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid #f4f4f5;
   padding-top: 10px;
 }
 
-/* Auth Pages (Login & Register) */
+/* ==========================================================================
+   10. Halaman Login & Register
+   ========================================================================== */
 .auth-canvas-container {
-  min-height: 85vh;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px 16px;
+  padding: 24px;
+  background-color: var(--bg-canvas);
 }
 
 .auth-card-neo {
+  position: relative;
+  background-color: #ffffff;
+  border: 2px solid var(--border-dark);
+  border-radius: 28px;
+  padding: 36px 32px;
   width: 100%;
   max-width: 440px;
-  background: #ffffff;
-  border: 2px solid var(--outline-dark);
-  border-radius: var(--radius-xl);
-  padding: 36px 32px;
-  position: relative;
+  box-shadow: 0 20px 45px -10px rgba(17, 24, 39, 0.15);
   overflow: hidden;
-  box-shadow: var(--shadow-neo-lg);
 }
 
 .auth-brand-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 3px 10px;
-  border-radius: var(--radius-pill);
-  background: var(--outline-dark);
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background-color: #111827;
   color: #ffffff;
-  font-size: 0.775rem;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  margin-bottom: 16px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 18px;
 }
 
 .auth-title {
-  font-size: 1.65rem;
+  font-size: 1.75rem;
   font-weight: 800;
-  letter-spacing: -0.025em;
-  color: var(--color-ink-primary);
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
   margin: 0 0 6px 0;
-  line-height: 1.25;
 }
 
 .auth-subtitle {
   font-size: 0.875rem;
-  color: var(--color-ink-muted);
-  margin: 0 0 20px 0;
+  color: var(--text-secondary);
+  margin: 0 0 24px 0;
 }
 
 .auth-btn-full {
   width: 100%;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
 .auth-footer-links {
   margin-top: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
   text-align: center;
+  border-top: 1px solid #f4f4f5;
+  padding-top: 18px;
 }
 
 .auth-switch-text {
   font-size: 0.85rem;
-  color: var(--color-ink-secondary);
-  margin: 0;
+  color: var(--text-secondary);
+  margin: 0 0 12px 0;
 }
 
 .auth-link-bold {
+  color: var(--text-primary);
   font-weight: 700;
-  color: var(--color-ink-primary);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
 .demo-credentials-pill {
   display: inline-flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 8px 12px;
-  border-radius: var(--radius-md);
-  background: #f8fafc;
-  border: 1px solid #cbd5e1;
-  font-size: 0.775rem;
-  text-align: center;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  background-color: #fafafa;
+  border: 1px solid var(--border-muted);
+  font-size: 0.75rem;
 }
 
 .demo-chip-label {
-  font-weight: 700;
-  color: #334155;
+  font-weight: 800;
+  color: #4f46e5;
+  text-transform: uppercase;
 }
 
 .demo-chip-val {
+  color: var(--text-muted);
   font-family: monospace;
-  color: #475569;
 }
 
-/* Accessibility Focus States */
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible,
-a:focus-visible {
-  outline: 2.5px solid var(--outline-dark);
-  outline-offset: 2.5px;
+/* ==========================================================================
+   11. Aksesibilitas: Focus Ring, Reduced Motion, & Print
+   ========================================================================== */
+:focus-visible {
+  outline: 2px solid var(--border-dark);
+  outline-offset: 2px;
 }
 
-/* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -926,72 +1590,138 @@ a:focus-visible {
   }
 }
 
-/* Responsive Mobile Layouts (< 600px) */
-@media (max-width: 600px) {
-  .page-wrapper {
-    margin: 12px auto 32px auto;
-    padding: 0 10px;
+/* ==========================================================================
+   12. Responsive Breakpoints
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .dashboard-grid-layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
   }
 
-  .navbar-pill {
-    flex-direction: column;
-    align-items: stretch;
-    border-radius: var(--radius-lg);
-    padding: 12px 14px;
-    gap: 12px;
-  }
-
-  .navbar-links {
-    justify-content: center;
-  }
-
-  .navbar-user {
-    justify-content: space-between;
-    border-top: 1px solid #27272a;
-    padding-top: 10px;
-  }
-
-  .main-content-panel {
-    border-radius: var(--radius-lg);
-    padding: 20px 16px;
-  }
-
-  .hero-greeting-title {
-    font-size: 1.5rem;
-  }
-
-  .stat-chips-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  .form-row-grid,
-  .form-row-grid-3 {
+  .courses-layout-grid {
     grid-template-columns: 1fr;
   }
 
-  .task-card-neo {
+  .tilted-overlay-card {
+    transform: none !important;
+  }
+
+  .stat-chips-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  .device-canvas {
+    padding: 8px 4px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .device-frame {
+    border-radius: 20px;
+    padding: 12px 6px 16px 6px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .device-navbar {
     flex-direction: column;
     align-items: stretch;
-    gap: 14px;
+    gap: 12px;
+    padding: 4px 6px 14px 6px;
   }
 
-  .task-actions-col {
-    align-items: flex-start;
-    gap: 10px;
+  .tab-active-notch {
+    display: none !important;
   }
 
-  .task-badges-cluster {
-    justify-content: flex-start;
+  .device-nav-tabs {
+    justify-content: center;
   }
 
-  .task-button-group {
-    width: 100%;
+  .device-user-area {
     justify-content: space-between;
   }
 
-  .auth-card-neo {
-    padding: 28px 20px;
-    border-radius: var(--radius-lg);
+  .app-panel {
+    border-radius: 18px;
+    padding: 16px 10px 24px 10px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .panel-header-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .greeting-main-heading {
+    font-size: 1.55rem;
+    line-height: 1.2;
+  }
+
+  .hero-task-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 14px 12px;
+    gap: 14px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .hero-blob-artwork {
+    width: 56px;
+    height: 56px;
+  }
+
+  .hero-top-cutout-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
+  .hero-meta-row {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-right: 64px; /* Ruang agar tidak tertimpa cutout */
+  }
+
+  .hero-task-title {
+    font-size: 1.2rem;
+    line-height: 1.3;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .hero-actions-row {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .task-cards-grid-2col {
+    grid-template-columns: 1fr;
+  }
+
+  .courses-grid-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .task-filter-header-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
   }
 }

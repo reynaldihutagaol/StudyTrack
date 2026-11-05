@@ -2,9 +2,6 @@ import React from "react";
 
 /**
  * Memformat deadline ke tampilan lokal Indonesia, contoh: "03 Jul 2026, 23.59".
- *
- * @param {string} deadline Tanggal dan jam deadline dari API.
- * @returns {string}
  */
 function formatDeadline(deadline) {
   if (!deadline) return "-";
@@ -21,10 +18,6 @@ function formatDeadline(deadline) {
 
 /**
  * Menghitung dan memformat durasi sisa waktu (milidetik) ke teks bahasa Indonesia yang ramah pengguna.
- * Contoh output: "5 jam 12 menit", "2 hari 3 jam", "45 menit".
- *
- * @param {number} ms Selisih waktu dalam milidetik (positif atau negatif).
- * @returns {string}
  */
 export function formatDuration(ms) {
   if (ms === null || ms === undefined || isNaN(ms)) {
@@ -55,7 +48,7 @@ export function formatDuration(ms) {
 }
 
 /**
- * Ikon jam SVG untuk badge reminder mendekati deadline.
+ * Ikon jam SVG untuk badge mendekati deadline.
  */
 function ClockIcon({ className = "badge-icon" }) {
   return (
@@ -102,9 +95,9 @@ function AlertIcon({ className = "badge-icon" }) {
 }
 
 /**
- * Ikon kalender kecil SVG untuk metadata deadline.
+ * Ikon checklist untuk status tugas selesai.
  */
-function CalendarIcon({ className = "meta-icon" }) {
+function CheckIcon({ className = "badge-icon" }) {
   return (
     <svg
       className={className}
@@ -113,32 +106,7 @@ function CalendarIcon({ className = "meta-icon" }) {
       viewBox="0 0 16 16"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x="2" y="3" width="12" height="11" rx="2" />
-      <line x1="2" y1="6" x2="14" y2="6" />
-      <line x1="5" y1="1.5" x2="5" y2="3.5" />
-      <line x1="11" y1="1.5" x2="11" y2="3.5" />
-    </svg>
-  );
-}
-
-/**
- * Ikon centang SVG untuk status selesai.
- */
-function CheckIcon({ className = "badge-icon" }) {
-  return (
-    <svg
-      className={className}
-      width="12"
-      height="12"
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.4"
+      strokeWidth="2.5"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
@@ -149,103 +117,177 @@ function CheckIcon({ className = "badge-icon" }) {
 }
 
 /**
- * Card satu tugas pada halaman Daftar Tugas.
- *
- * Mengadopsi bahasa visual modern:
- * - Card putih dengan outline gelap tegas (1.75px) dan radius 20px
- * - Aksen sudut dekoratif lime (tidak merepresentasikan status)
- * - Tiga kondisi urgensi (mendekati = oranye, overdue = merah, normal = netral)
- * - Tombol aksi pill outline yang proporsional
- *
- * @param {object} props
- * @param {object} props.task Data tugas dari API.
- * @param {(task: object) => void} props.onToggleStatus Dipanggil saat tombol status ditekan.
- * @param {(id: number) => void} props.onDelete Dipanggil saat tombol hapus ditekan.
+ * Komponen TaskCard dengan gaya neo-grotesk v2:
+ * - Outline tegas 1.75px, sudut 20px
+ * - Blob dekorasi sudut (lime atau lavender) berisi ikon SVG datar buatan sendiri
+ * - Hierarki informasi yang rapi dan tegas
+ * - Badge semantik (ikon + teks, kontras tinggi)
+ * - Tombol aksi pill sekunder yang bersih
  */
 export default function TaskCard({ task, onToggleStatus, onDelete }) {
-  const category = task.deadline_category || "normal";
-  const isMendekati = category === "mendekati";
-  const isOverdue = category === "overdue";
   const isSelesai = task.status === "selesai";
+  const category = task.deadline_category || "normal";
+  const sisaWaktuFormatted = formatDuration(task.sisa_waktu_ms);
 
-  const cardUrgencyClass = isSelesai
-    ? "card-selesai"
-    : isMendekati
-    ? "card-mendekati"
-    : isOverdue
-    ? "card-overdue"
-    : "card-normal";
+  let urgencyCardClass = "card-normal";
+  if (isSelesai) {
+    urgencyCardClass = "card-selesai";
+  } else if (category === "mendekati") {
+    urgencyCardClass = "card-mendekati";
+  } else if (category === "overdue") {
+    urgencyCardClass = "card-overdue";
+  }
+
+  // Pilih warna aksen sudut: mendekati/overdue memakai lime cerah, normal/selesai memakai lavender
+  const blobColorClass = category === "mendekati" || category === "overdue" ? "blob-lime" : "blob-lavender";
+
+  // Nama mata kuliah dari respons server (task.mata_kuliah)
+  const courseName = task.mata_kuliah || "";
 
   return (
-    <article className={`task-card-neo ${cardUrgencyClass}`}>
-      {/* Aksen sudut dekoratif lime */}
-      <span className="card-corner-lime-accent" aria-hidden="true" />
-
-      <div className="task-content">
-        <header className="task-header">
-          <h3 className="task-title">{task.judul}</h3>
-          {task.mata_kuliah && (
-            <span className="task-course-tag">{task.mata_kuliah}</span>
+    <article
+      className={`task-card-neo ${urgencyCardClass}`}
+      aria-label={`Tugas: ${task.judul}`}
+    >
+      {/* Bentuk kurva/blob sudut dengan ikon SVG datar buatan sendiri */}
+      <div className={`card-corner-blob ${blobColorClass}`} aria-hidden="true">
+        <svg
+          className="blob-corner-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          {category === "overdue" ? (
+            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+          ) : category === "mendekati" ? (
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+          ) : isSelesai ? (
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14M22 4 12 14.01l-3-3" />
+          ) : (
+            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
           )}
-        </header>
+        </svg>
+      </div>
 
-        <div className="task-deadline-row">
-          <CalendarIcon />
-          <span>Tenggat: {formatDeadline(task.deadline)}</span>
-        </div>
+      <div className="card-top-meta">
+        <span className="card-kicker-label">
+          {courseName ? courseName.toUpperCase() : "TUGAS KULIAH"}
+        </span>
 
-        {task.deskripsi && (
-          <p className="task-description">{task.deskripsi}</p>
+        {/* Badge status / urgensi */}
+        {isSelesai ? (
+          <span className="status-badge-pill badge-selesai">
+            <CheckIcon />
+            <span>Selesai</span>
+          </span>
+        ) : category === "mendekati" ? (
+          <span className="status-badge-pill badge-mendekati">
+            <ClockIcon />
+            <span>Mendekati deadline{sisaWaktuFormatted ? ` (${sisaWaktuFormatted})` : ""}</span>
+          </span>
+        ) : category === "overdue" ? (
+          <span className="status-badge-pill badge-overdue">
+            <AlertIcon />
+            <span>Terlambat{sisaWaktuFormatted ? ` (${sisaWaktuFormatted})` : ""}</span>
+          </span>
+        ) : (
+          <span className="status-badge-pill badge-normal">
+            <span className="badge-dot-gray" aria-hidden="true" />
+            <span>Belum</span>
+          </span>
         )}
       </div>
 
-      <div className="task-actions-col">
-        <div className="task-badges-cluster" aria-label="Status tugas dan tenggat waktu">
-          {isMendekati && (
-            <span className="badge-pill badge-urgent-mendekati" role="status">
-              <ClockIcon />
-              <span>Mendekati deadline · sisa {formatDuration(task.sisa_waktu_ms)}</span>
-            </span>
-          )}
+      {/* Judul & Mata Kuliah */}
+      <div className="card-body-section">
+        <h3 className={`card-task-title ${isSelesai ? "title-selesai" : ""}`}>
+          {task.judul}
+        </h3>
 
-          {isOverdue && (
-            <span className="badge-pill badge-urgent-overdue" role="status">
-              <AlertIcon />
-              <span>Terlambat · {formatDuration(task.sisa_waktu_ms)}</span>
-            </span>
-          )}
+        {courseName && (
+          <div className="card-course-pill">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+              <path d="M6 12v5c3 3 9 3 12 0v-5" />
+            </svg>
+            <span>{courseName}</span>
+          </div>
+        )}
 
-          <span className={`badge-pill badge-status-pill ${isSelesai ? "selesai" : "belum"}`}>
-            {isSelesai ? (
-              <>
-                <CheckIcon />
-                <span>Selesai</span>
-              </>
-            ) : (
-              <>
-                <span className="status-dot-neutral" aria-hidden="true" />
-                <span>Belum</span>
-              </>
-            )}
-          </span>
+        {task.deskripsi && (
+          <p className="card-desc-text">{task.deskripsi}</p>
+        )}
+      </div>
+
+      {/* Footer: info deadline dan tombol aksi */}
+      <div className="card-footer-section">
+        <div className="card-deadline-info" title="Tenggat Waktu">
+          <svg
+            className="deadline-meta-icon"
+            width="13"
+            height="13"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="2" y="3" width="12" height="11" rx="2" />
+            <line x1="2" y1="6" x2="14" y2="6" />
+            <line x1="5" y1="1" x2="5" y2="3" />
+            <line x1="11" y1="1" x2="11" y2="3" />
+          </svg>
+          <span className="deadline-time-text">{formatDeadline(task.deadline)}</span>
         </div>
 
-        <div className="task-button-group">
+        <div className="card-actions-row">
           <button
             type="button"
-            className={`btn-pill-action ${isSelesai ? "btn-pill-undo" : "btn-pill-toggle"}`}
+            className={`btn-pill-toggle ${isSelesai ? "btn-undo" : "btn-complete"}`}
             onClick={() => onToggleStatus(task)}
-            aria-label={isSelesai ? "Tandai tugas belum selesai" : "Tandai tugas selesai"}
+            aria-label={isSelesai ? `Tandai ${task.judul} belum selesai` : `Tandai ${task.judul} selesai`}
           >
-            {isSelesai ? "Tandai Belum" : "Tandai Selesai"}
+            {isSelesai ? "Batalkan" : "Tandai Selesai"}
           </button>
+
           <button
             type="button"
             className="btn-pill-delete"
             onClick={() => onDelete(task.id)}
-            aria-label={`Hapus tugas ${task.judul}`}
+            aria-label={`Hapus tugas: ${task.judul}`}
           >
-            Hapus
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+            </svg>
+            <span>Hapus</span>
           </button>
         </div>
       </div>
