@@ -1,6 +1,9 @@
 import test, { describe, it, before, after } from "node:test";
 import assert from "node:assert/strict";
 import http from "node:http";
+import os from "node:os";
+import path from "node:path";
+import fs from "node:fs";
 import express from "express";
 import authRoutes from "../routes/auth.js";
 import taskRoutes from "../routes/tasks.js";
@@ -12,8 +15,15 @@ describe("Tasks API Integration", () => {
   let baseUrl;
   let demoToken;
   let user2Token;
+  let testTempDir;
+  let testDbFile;
 
   before(async () => {
+    // Isolasi berkas database: gunakan berkas sementara terisolasi, bukan backend/db.json asli
+    testTempDir = fs.mkdtempSync(path.join(os.tmpdir(), "studytrack-test-"));
+    testDbFile = path.join(testTempDir, "test-db.json");
+    process.env.DB_FILE = testDbFile;
+
     resetDB();
     const app = express();
     app.use(express.json());
@@ -52,7 +62,11 @@ describe("Tasks API Integration", () => {
     if (server) {
       server.close();
     }
-    resetDB();
+    // Hapus berkas database sementara dan bersihkan env var
+    if (testTempDir && fs.existsSync(testTempDir)) {
+      fs.rmSync(testTempDir, { recursive: true, force: true });
+    }
+    delete process.env.DB_FILE;
   });
 
   it("GET /api/tasks dengan ?now mengembalikan urutan dan kategori sesuai spesifikasi", async () => {

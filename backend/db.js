@@ -19,7 +19,17 @@ import { fileURLToPath } from "url";
 import bcrypt from "bcryptjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DB_PATH = path.join(__dirname, "db.json");
+const DEFAULT_DB_PATH = path.join(__dirname, "db.json");
+
+/**
+ * Mengambil lokasi berkas database aktif.
+ * Mendukung variabel lingkungan `DB_FILE` untuk isolasi saat testing.
+ *
+ * @returns {string} Path absolut file JSON database.
+ */
+export function getDBPath() {
+  return process.env.DB_FILE ? path.resolve(process.env.DB_FILE) : DEFAULT_DB_PATH;
+}
 
 /**
  * Membuat data awal (seed) yang sesuai dengan contoh data pada dokumen studi
@@ -27,7 +37,7 @@ const DB_PATH = path.join(__dirname, "db.json");
  *
  * @returns {object} Isi database dalam kondisi awal.
  */
-function seedData() {
+export function seedData() {
   const passwordHash = bcrypt.hashSync("demo1234", 10);
   return {
     nextIds: { user: 2, course: 4, task: 4 },
@@ -75,16 +85,17 @@ function seedData() {
 }
 
 /**
- * Membaca seluruh isi database. Jika `db.json` belum ada, berkas dibuat
+ * Membaca seluruh isi database. Jika berkas database belum ada, dibuat
  * terlebih dahulu dari data seed.
  *
  * @returns {object} Isi database.
  */
 export function readDB() {
-  if (!fs.existsSync(DB_PATH)) {
+  const dbPath = getDBPath();
+  if (!fs.existsSync(dbPath)) {
     writeDB(seedData());
   }
-  return JSON.parse(fs.readFileSync(DB_PATH, "utf-8"));
+  return JSON.parse(fs.readFileSync(dbPath, "utf-8"));
 }
 
 /**
@@ -93,7 +104,12 @@ export function readDB() {
  * @param {object} db Isi database yang akan disimpan.
  */
 export function writeDB(db) {
-  fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2));
+  const dbPath = getDBPath();
+  const dir = path.dirname(dbPath);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
 }
 
 /**
