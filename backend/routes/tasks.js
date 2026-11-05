@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { readDB, writeDB } from "../db.js";
 import { requireAuth } from "../middleware/auth.js";
+import { processTasks, enrichTask, parseDeadline } from "../utils/deadline.js";
 
 const router = Router();
 
@@ -9,44 +10,64 @@ router.use(requireAuth);
 
 /**
  * GET /api/tasks
- * Daftar seluruh tugas milik pengguna yang sedang login, lintas semua mata
- * kuliah. Setiap tugas menyertakan `mata_kuliah` (nama mata kuliahnya).
+ * Daftar seluruh tugas milik pengguna yang sedang login, lintas semua mata kuliah.
+ * Setiap tugas menyertakan `mata_kuliah`, `deadline_category`, dan `sisa_waktu_ms`.
  *
- * Urutan saat ini: `created_at` terbaru di atas.
+ * Urutan hasil:
+ * 1. Grup "mendekati" (sisa < 24 jam) diurutkan berdasarkan `deadline` ASC.
+ * 2. Grup "normal" diurutkan berdasarkan `created_at` DESC (perilaku bawaan).
+ * 3. Grup "overdue" (sisa <= 0) diurutkan berdasarkan `deadline` DESC (yang baru saja lewat di atas).
+ *
+ * Parameter simulasi waktu (non-production):
+ * Khusus lingkungan non-production (NODE_ENV !== "production"), query `?now=<ISO 8601 dengan zona>`
+ * diizinkan untuk mensimulasikan waktu acuan sistem. Ini digunakan untuk pengujian dan demo
+ * data seed yang tenggat waktunya telah lampau. Pada lingkungan production, parameter query ini
+ * diabaikan sepenuhnya dan waktu server saat ini selalu digunakan.
  *
  * Response : 200 { tasks }
- *
- * CATATAN UNTUK PESERTA STUDI KASUS:
- * Ini adalah titik yang relevan untuk fitur "Reminder Tugas Mendekati Deadline".
- * Silakan tambahkan logic untuk menandai/mengurutkan ulang tugas yang
- * sisa waktunya < 24 jam di sini (atau di tempat lain sesuai rancangan Anda).
  */
 router.get("/", (req, res) => {
+  let now = new Date();
+
+  // Simulasi waktu hanya aktif di luar lingkungan production
+  if (process.env.NODE_ENV !== "production" && req.query.now) {
+    const simulated = parseDeadline(req.query.now);
+    if (simulated) {
+      now = simulated;
+    }
+  }
+
   const db = readDB();
-  const tasks = db.tasks
+  const userTasks = db.tasks
     .filter((t) => t.user_id === req.user.id)
     .map((t) => {
       const course = db.courses.find((c) => c.id === t.mata_kuliah_id);
       return { ...t, mata_kuliah: course ? course.name : null };
-    })
-    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    });
+
+  const tasks = processTasks(userTasks, now);
 
   res.json({ tasks });
 });
 
 /**
  * GET /api/tasks/:id
- * Detail satu tugas milik pengguna yang sedang login.
+ * Detail satu tugas milik pengguna yang sedang login beserta klasifikasi deadline.
  *
  * Response : 200 { task } | 404 tidak ditemukan
  */
 router.get("/:id", (req, res) => {
   const id = Number(req.params.id);
   const db = readDB();
-  const task = db.tasks.find((t) => t.id === id && t.user_id === req.user.id);
-  if (!task) {
+  const rawTask = db.tasks.find((t) => t.id === id && t.user_id === req.user.id);
+  if (!rawTask) {
     return res.status(404).json({ error: "Tugas tidak ditemukan." });
   }
+
+  const course = db.courses.find((c) => c.id === rawTask.mata_kuliah_id);
+  const taskWithCourse = { ...rawTask, mata_kuliah: course ? course.name : null };
+  const task = enrichTask(taskWithCourse, new Date());
+
   res.json({ task });
 });
 
@@ -81,7 +102,10 @@ router.post("/", (req, res) => {
   };
   db.tasks.push(newTask);
   writeDB(db);
-  res.status(201).json({ task: newTask });
+
+  const taskWithCourse = { ...newTask, mata_kuliah: course.name };
+  const task = enrichTask(taskWithCourse, new Date());
+  res.status(201).json({ task });
 });
 
 /**
@@ -111,7 +135,11 @@ router.put("/:id", (req, res) => {
     task.status = status;
   }
   writeDB(db);
-  res.json({ task });
+
+  const course = db.courses.find((c) => c.id === task.mata_kuliah_id);
+  const taskWithCourse = { ...task, mata_kuliah: course ? course.name : null };
+  const enrichedTask = enrichTask(taskWithCourse, new Date());
+  res.json({ task: enrichedTask });
 });
 
 /**

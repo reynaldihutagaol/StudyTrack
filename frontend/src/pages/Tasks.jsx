@@ -6,6 +6,9 @@ import TaskCard from "../components/TaskCard.jsx";
 /**
  * Halaman Daftar Tugas: form tambah tugas dan daftar seluruh tugas pengguna
  * lintas mata kuliah, sesuai urutan yang dikirim backend.
+ *
+ * Menerapkan refetch otomatis saat jendela mendapat fokus dan setiap 60 detik
+ * selama tab aktif, serta setelah perubahan status tugas.
  */
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
@@ -16,14 +19,55 @@ export default function Tasks() {
   const [deadline, setDeadline] = useState("");
   const [error, setError] = useState("");
 
+  async function loadTasks() {
+    try {
+      const res = await api.get("/tasks");
+      setTasks(res.data.tasks);
+    } catch (err) {
+      console.error("Gagal merefresh daftar tugas:", err);
+    }
+  }
+
   async function loadData() {
-    const [tasksRes, coursesRes] = await Promise.all([api.get("/tasks"), api.get("/courses")]);
-    setTasks(tasksRes.data.tasks);
-    setCourses(coursesRes.data.courses);
+    try {
+      const [tasksRes, coursesRes] = await Promise.all([api.get("/tasks"), api.get("/courses")]);
+      setTasks(tasksRes.data.tasks);
+      setCourses(coursesRes.data.courses);
+    } catch (err) {
+      console.error("Gagal memuat data:", err);
+    }
   }
 
   useEffect(() => {
     loadData();
+
+    // Refetch saat jendela mendapat fokus kembali
+    function handleFocus() {
+      loadTasks();
+    }
+
+    // Refetch saat tab browser beralih kembali terlihat
+    function handleVisibilityChange() {
+      if (document.visibilityState === "visible") {
+        loadTasks();
+      }
+    }
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Refetch berkala setiap 60 detik selama tab terlihat
+    const intervalId = setInterval(() => {
+      if (document.visibilityState === "visible") {
+        loadTasks();
+      }
+    }, 60000);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      clearInterval(intervalId);
+    };
   }, []);
 
   async function handleSubmit(e) {
@@ -38,7 +82,7 @@ export default function Tasks() {
       setJudul("");
       setDeskripsi("");
       setDeadline("");
-      loadData();
+      await loadTasks();
     } catch (err) {
       setError(err.response?.data?.error || "Gagal menambahkan tugas.");
     }
@@ -46,13 +90,22 @@ export default function Tasks() {
 
   async function handleToggleStatus(task) {
     const newStatus = task.status === "selesai" ? "belum" : "selesai";
-    await api.put(`/tasks/${task.id}`, { status: newStatus });
-    loadData();
+    try {
+      await api.put(`/tasks/${task.id}`, { status: newStatus });
+      // Refetch setelah status berubah agar urutan dan kategori diperbarui server
+      await loadTasks();
+    } catch (err) {
+      console.error("Gagal mengubah status tugas:", err);
+    }
   }
 
   async function handleDelete(id) {
-    await api.delete(`/tasks/${id}`);
-    loadData();
+    try {
+      await api.delete(`/tasks/${id}`);
+      await loadTasks();
+    } catch (err) {
+      console.error("Gagal menghapus tugas:", err);
+    }
   }
 
   return (
