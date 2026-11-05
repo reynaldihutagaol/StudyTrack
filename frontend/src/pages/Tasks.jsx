@@ -278,7 +278,7 @@ export default function Tasks() {
                     <div className="hero-content-body">
                       <div className="hero-meta-row">
                         <span className="hero-category-label">
-                          {heroTask.mata_kuliah ? `MATA KULIAH • ${heroTask.mata_kuliah.toUpperCase()}` : "TUGAS UTAMA"}
+                          PRIORITAS UTAMA
                         </span>
                         {heroTask.deadline_category === "mendekati" && (
                           <span className="hero-urgent-pill">

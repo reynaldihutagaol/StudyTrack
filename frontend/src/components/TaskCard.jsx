@@ -175,10 +175,6 @@ export default function TaskCard({ task, onToggleStatus, onDelete }) {
       </div>
 
       <div className="card-top-meta">
-        <span className="card-kicker-label">
-          {courseName ? courseName.toUpperCase() : "TUGAS KULIAH"}
-        </span>
-
         {/* Badge status / urgensi */}
         {isSelesai ? (
           <span className="status-badge-pill badge-selesai">
