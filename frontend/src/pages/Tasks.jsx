@@ -99,6 +99,10 @@ export default function Tasks() {
       setFormError("Pilih mata kuliah terlebih dahulu.");
       return;
     }
+    if (deadline && new Date(deadline).getTime() < Date.now() - 60000) {
+      setFormError("Batas pengumpulan tidak boleh sebelum waktu saat ini.");
+      return;
+    }
     setIsSubmitting(true);
     try {
       await api.post("/tasks", { mata_kuliah_id: courseId, judul, deskripsi, deadline });
@@ -168,6 +172,11 @@ export default function Tasks() {
   const upcomingDeadlines = tasks
     .filter((t) => t.status !== "selesai" && t.deadline_category !== "overdue")
     .slice(0, 3);
+
+  // 5. Waktu saat ini sebagai batas minimum tanggal pengumpulan tugas baru
+  const minDateTime = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+    .toISOString()
+    .slice(0, 16);
 
   return (
     <div className="device-canvas">
@@ -294,7 +303,8 @@ export default function Tasks() {
                         {heroTask.mata_kuliah && (
                           <span className="hero-course-tag">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                              <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
+                              <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                              <path d="M6 12v5c3 3 9 3 12 0v-5" />
                             </svg>
                             <span>{heroTask.mata_kuliah}</span>
                           </span>
@@ -485,6 +495,7 @@ export default function Tasks() {
                       id="top-task-deadline"
                       type="datetime-local"
                       value={deadline}
+                      min={minDateTime}
                       onChange={(e) => setDeadline(e.target.value)}
                       required
                       className="neo-input"

@@ -181,7 +181,8 @@ export default function Courses() {
                           strokeLinejoin="round"
                           aria-hidden="true"
                         >
-                          <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
+                          <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                          <path d="M6 12v5c3 3 9 3 12 0v-5" />
                         </svg>
                       </div>
 

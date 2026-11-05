@@ -61,7 +61,7 @@ export default function Register() {
             <input
               id="register-email"
               type="email"
-              placeholder="nama@email.test"
+              placeholder="nama@studytrack.test"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
