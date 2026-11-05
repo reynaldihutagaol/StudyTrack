@@ -41,7 +41,7 @@ export default function Tasks() {
   const [formError, setFormError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // State filter tab (Semua, Mendekati, Normal, Terlambat, Selesai)
+  // State filter tab (Semua, Mendekati, Mendatang, Terlambat, Selesai)
   const [activeFilter, setActiveFilter] = useState("Semua");
 
   async function loadTasks() {
@@ -149,7 +149,7 @@ export default function Tasks() {
   // 2. Filter data murni dari server berdasarkan status / deadline_category (tanpa urut ulang)
   const filteredTasks = tasks.filter((t) => {
     if (activeFilter === "Mendekati") return t.deadline_category === "mendekati" && t.status !== "selesai";
-    if (activeFilter === "Normal") return t.deadline_category === "normal" && t.status !== "selesai";
+    if (activeFilter === "Mendatang") return t.deadline_category === "normal" && t.status !== "selesai";
     if (activeFilter === "Terlambat") return t.deadline_category === "overdue" && t.status !== "selesai";
     if (activeFilter === "Selesai") return t.status === "selesai";
     return true; // "Semua"
@@ -276,11 +276,8 @@ export default function Tasks() {
 
                     {/* Informasi Konten Hero Task */}
                     <div className="hero-content-body">
-                      <div className="hero-meta-row">
-                        <span className="hero-category-label">
-                          PRIORITAS UTAMA
-                        </span>
-                        {heroTask.deadline_category === "mendekati" && (
+                      {heroTask.deadline_category === "mendekati" && (
+                        <div className="hero-meta-row">
                           <span className="hero-urgent-pill">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                               <circle cx="12" cy="12" r="10" />
@@ -288,8 +285,8 @@ export default function Tasks() {
                             </svg>
                             <span>Segera Kumpulkan</span>
                           </span>
-                        )}
-                      </div>
+                        </div>
+                      )}
 
                       <h3 className="hero-task-title">{heroTask.judul}</h3>
 
@@ -397,7 +394,7 @@ export default function Tasks() {
                   </div>
 
                   <div className="filter-pills-bar" role="tablist" aria-label="Filter kategori tugas">
-                    {["Semua", "Mendekati", "Normal", "Terlambat", "Selesai"].map((filter) => (
+                    {["Semua", "Mendekati", "Mendatang", "Terlambat", "Selesai"].map((filter) => (
                       <button
                         key={filter}
                         type="button"
