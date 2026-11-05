@@ -127,30 +127,6 @@ function CalendarIcon({ className = "meta-icon" }) {
 }
 
 /**
- * Ikon tempat sampah SVG untuk aksi hapus yang tenang.
- */
-function TrashIcon({ className = "btn-icon" }) {
-  return (
-    <svg
-      className={className}
-      width="13"
-      height="13"
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <polyline points="3 4 13 4" />
-      <path d="M5 4V2.5a1 1 0 011-1h4a1 1 0 011 1V4" />
-      <path d="M4 4l1 10a1.5 1.5 0 001.5 1.5h5a1.5 1.5 0 001.5-1.5L12 4" />
-    </svg>
-  );
-}
-
-/**
  * Ikon centang SVG untuk status selesai.
  */
 function CheckIcon({ className = "badge-icon" }) {
@@ -162,7 +138,7 @@ function CheckIcon({ className = "badge-icon" }) {
       viewBox="0 0 16 16"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2.2"
+      strokeWidth="2.4"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
@@ -175,11 +151,11 @@ function CheckIcon({ className = "badge-icon" }) {
 /**
  * Card satu tugas pada halaman Daftar Tugas.
  *
- * Menampilkan:
- * 1. Hierarki informasi jelas: Judul > Mata Kuliah > Waktu Deadline > Deskripsi
- * 2. Badge reminder waktu yang tegas (Mendekati deadline jingga / Terlambat merah)
- * 3. Badge status tugas netral yang tidak membingungkan warna urgensi
- * 4. Aksi tombol yang tenang dan proporsional (toggle status outline + hapus ghost)
+ * Mengadopsi bahasa visual modern:
+ * - Card putih dengan outline gelap tegas (1.75px) dan radius 20px
+ * - Aksen sudut dekoratif lime (tidak merepresentasikan status)
+ * - Tiga kondisi urgensi (mendekati = oranye, overdue = merah, normal = netral)
+ * - Tombol aksi pill outline yang proporsional
  *
  * @param {object} props
  * @param {object} props.task Data tugas dari API.
@@ -192,22 +168,24 @@ export default function TaskCard({ task, onToggleStatus, onDelete }) {
   const isOverdue = category === "overdue";
   const isSelesai = task.status === "selesai";
 
-  // Kelas aksen kondisi kartu
-  const cardConditionClass = isSelesai
+  const cardUrgencyClass = isSelesai
     ? "card-selesai"
     : isMendekati
-    ? "accent-mendekati"
+    ? "card-mendekati"
     : isOverdue
-    ? "accent-overdue"
+    ? "card-overdue"
     : "card-normal";
 
   return (
-    <article className={`card task-card ${cardConditionClass}`}>
+    <article className={`task-card-neo ${cardUrgencyClass}`}>
+      {/* Aksen sudut dekoratif lime */}
+      <span className="card-corner-lime-accent" aria-hidden="true" />
+
       <div className="task-content">
         <header className="task-header">
-          <strong className="task-title">{task.judul}</strong>
+          <h3 className="task-title">{task.judul}</h3>
           {task.mata_kuliah && (
-            <span className="task-course-pill">{task.mata_kuliah}</span>
+            <span className="task-course-tag">{task.mata_kuliah}</span>
           )}
         </header>
 
@@ -222,22 +200,22 @@ export default function TaskCard({ task, onToggleStatus, onDelete }) {
       </div>
 
       <div className="task-actions-col">
-        <div className="task-badges" aria-label="Status tugas dan tenggat waktu">
+        <div className="task-badges-cluster" aria-label="Status tugas dan tenggat waktu">
           {isMendekati && (
-            <span className="badge badge-deadline mendekati" role="status">
+            <span className="badge-pill badge-urgent-mendekati" role="status">
               <ClockIcon />
               <span>Mendekati deadline · sisa {formatDuration(task.sisa_waktu_ms)}</span>
             </span>
           )}
 
           {isOverdue && (
-            <span className="badge badge-deadline overdue" role="status">
+            <span className="badge-pill badge-urgent-overdue" role="status">
               <AlertIcon />
               <span>Terlambat · {formatDuration(task.sisa_waktu_ms)}</span>
             </span>
           )}
 
-          <span className={`badge badge-status ${isSelesai ? "selesai" : "belum"}`}>
+          <span className={`badge-pill badge-status-pill ${isSelesai ? "selesai" : "belum"}`}>
             {isSelesai ? (
               <>
                 <CheckIcon />
@@ -245,17 +223,17 @@ export default function TaskCard({ task, onToggleStatus, onDelete }) {
               </>
             ) : (
               <>
-                <span className="status-dot belum" aria-hidden="true" />
+                <span className="status-dot-neutral" aria-hidden="true" />
                 <span>Belum</span>
               </>
             )}
           </span>
         </div>
 
-        <div className="task-buttons">
+        <div className="task-button-group">
           <button
             type="button"
-            className={`btn-action ${isSelesai ? "btn-action-undo" : "btn-action-complete"}`}
+            className={`btn-pill-action ${isSelesai ? "btn-pill-undo" : "btn-pill-toggle"}`}
             onClick={() => onToggleStatus(task)}
             aria-label={isSelesai ? "Tandai tugas belum selesai" : "Tandai tugas selesai"}
           >
@@ -263,12 +241,11 @@ export default function TaskCard({ task, onToggleStatus, onDelete }) {
           </button>
           <button
             type="button"
-            className="btn-delete-ghost"
+            className="btn-pill-delete"
             onClick={() => onDelete(task.id)}
             aria-label={`Hapus tugas ${task.judul}`}
           >
-            <TrashIcon />
-            <span>Hapus</span>
+            Hapus
           </button>
         </div>
       </div>

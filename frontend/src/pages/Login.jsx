@@ -3,7 +3,10 @@ import { useNavigate, Link } from "react-router-dom";
 import api from "../api.js";
 import { useAuth } from "../AuthContext.jsx";
 
-/** Halaman login. Field sudah terisi akun demo agar mudah dicoba. */
+/**
+ * Halaman Login:
+ * Tampilan kartu otentikasi di tengah canvas lavender lembut dengan estetika neo-grotesk.
+ */
 export default function Login() {
   const [email, setEmail] = useState("demo@studytrack.test");
   const [password, setPassword] = useState("demo1234");
@@ -24,33 +27,65 @@ export default function Login() {
   }
 
   return (
-    <div className="container auth-page">
-      <div className="card">
-        <h2>Login ke StudyTrack</h2>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          {error && <p className="error">{error}</p>}
-          <button type="submit">Login</button>
+    <div className="auth-canvas-container">
+      <div className="auth-card-neo">
+        <span className="card-corner-lime-accent" aria-hidden="true" />
+
+        <div className="auth-brand-badge">
+          <span className="brand-dot" aria-hidden="true" />
+          <span>StudyTrack</span>
+        </div>
+
+        <h1 className="auth-title">Masuk ke Akun</h1>
+        <p className="auth-subtitle">Kelola tugas kuliah dan jadwal tenggat waktumu.</p>
+
+        <form onSubmit={handleSubmit} className="neo-form">
+          <div className="form-group">
+            <label htmlFor="login-email" className="form-label">
+              Alamat Email
+            </label>
+            <input
+              id="login-email"
+              type="email"
+              placeholder="nama@email.test"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="neo-input"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="login-password" className="form-label">
+              Kata Sandi
+            </label>
+            <input
+              id="login-password"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="neo-input"
+            />
+          </div>
+
+          {error && <p className="form-error-alert" role="alert">{error}</p>}
+
+          <button type="submit" className="btn-pill-primary auth-btn-full">
+            Masuk Sekarang
+          </button>
         </form>
-        <p className="muted-link">
-          Belum punya akun? <Link to="/register">Daftar di sini</Link>
-        </p>
-        <p className="muted-link">
-          Akun demo sudah terisi otomatis (demo@studytrack.test / demo1234).
-        </p>
+
+        <div className="auth-footer-links">
+          <p className="auth-switch-text">
+            Belum punya akun? <Link to="/register" className="auth-link-bold">Daftar di sini</Link>
+          </p>
+          <div className="demo-credentials-pill">
+            <span className="demo-chip-label">Akun Demo</span>
+            <span className="demo-chip-val">demo@studytrack.test / demo1234</span>
+          </div>
+        </div>
       </div>
     </div>
   );
