@@ -1,168 +1,111 @@
-# StudyTrack Baseline
+# StudyTrack
 
-Starter kit untuk bonus **Implementasi kode nyata** pada studi kasus seleksi Software Engineer, Academya Arkavidia 11.0.
+Aplikasi web manajemen tugas kuliah untuk mahasiswa dengan fitur **Reminder Tugas Mendekati Deadline**.
 
-Isinya adalah kondisi StudyTrack saat ini: empat modul yang sudah berjalan (autentikasi, manajemen mata kuliah, manajemen tugas, dan halaman daftar tugas). Fitur **Reminder Tugas Mendekati Deadline** sengaja belum ada karena itulah yang perlu Anda rancang dan kerjakan.
+## Fitur Reminder Tugas Mendekati Deadline
 
-> Starter kit ini bersifat opsional. Anda boleh memakai stack lain selama struktur datanya konsisten dengan Bagian 1 (Konteks Aplikasi) pada dokumen studi kasus.
+Fitur ini memberikan visibilitas langsung terhadap tugas yang mendesak atau terlambat tanpa mengubah skema basis data. Seluruh logika klasifikasi dan pengurutan dihitung secara deterministik di backend setiap kali request dilakukan.
 
-## Stack
+### 1. Aturan Klasifikasi Kategori (`deadline_category`)
+Setiap tugas diklasifikasikan ke dalam salah satu dari tiga kategori secara berurutan:
+1. `status === "selesai"` &rarr; `"normal"` (tugas yang sudah selesai tidak pernah ditandai sebagai mendekati atau terlambat).
+2. `sisa_waktu = deadline - now`:
+   - `sisa_waktu <= 0` &rarr; `"overdue"` (tepat 0 milidetik dihitung sebagai overdue/terlambat).
+   - `0 < sisa_waktu < 24 jam` (strict kurang dari 24 jam; tepat 24 jam tidak termasuk) &rarr; `"mendekati"`.
+3. Selain kondisi di atas &rarr; `"normal"`.
+4. Jika `deadline` kosong atau tidak valid: ditangani secara aman dengan fallback ke `"normal"` disertai `console.warn` tanpa menyebabkan server crash.
 
-- **Backend:** Node.js + Express. Data disimpan di file JSON, jadi tidak perlu memasang database terpisah.
-- **Frontend:** React + Vite.
+### 2. Aturan Pengurutan Tugas
+Daftar tugas pada `GET /api/tasks` dikelompokkan dan diurutkan sebagai berikut:
+1. **Grup `mendekati`**: Ditampilkan di paling atas, diurutkan berdasarkan `deadline` **ASC** (tenggat waktu paling mendesak berada di paling atas).
+2. **Grup `normal`**: Ditampilkan di tengah, diurutkan berdasarkan `created_at` **DESC** (perilaku bawaan: tugas terbaru dibuat berada di atas).
+3. **Grup `overdue`**: Ditampilkan di bagian bawah, diurutkan berdasarkan `deadline` **DESC** (tugas yang baru saja lewat deadline berada di atas tugas yang sudah lama lewat).
+
+### 3. Penanganan Zona Waktu (WIB / UTC+07:00)
+- Field `deadline` dari browser input `datetime-local` disimpan sebagai waktu lokal tanpa informasi zona waktu (contoh: `2026-07-03T23:59`).
+- Sesuai keputusan desain sistem, waktu tanpa offset/zona waktu **secara eksplisit ditafsirkan sebagai Waktu Indonesia Barat (WIB / UTC+07:00)** melalui utilitas `backend/utils/deadline.js`, bukan menggunakan zona waktu lokal mesin/server tempat Node.js berjalan.
+- Jika string deadline sudah memiliki indikator UTC (`Z`) atau offset numerik (misal `+07:00`), nilai tersebut diparsing sesuai zona yang tertera.
+
+### 4. Simulasi Waktu dengan Query Parameter `?now=`
+Khusus di luar lingkungan production (`NODE_ENV !== "production"`), endpoint `GET /api/tasks` menerima query parameter:
+```
+GET /api/tasks?now=2026-07-03T00:00:00%2B07:00
+```
+- Query ini memungkinkan simulasi waktu acuan `now` untuk keperluan pengujian dan demo data seed (yang tenggat waktunya telah lampau).
+- Di lingkungan production (`NODE_ENV === "production"`), parameter ini diabaikan sepenuhnya dan server selalu menggunakan waktu nyata (`new Date()`).
+
+### 5. Tampilan Antarmuka (Frontend)
+- **Badge Mendekati**: Menampilkan badge bertema jingga hangat (`#ffedd5` / `#9a3412`) dengan ikon jam SVG dan teks dinamis (contoh: `Mendekati deadline · sisa 5 jam 12 menit`). Aksen garis kiri jingga halus pada card.
+- **Badge Terlambat**: Menampilkan badge bertema merah (`#fee2e2` / `#991b1b`) dengan ikon seru SVG dan teks dinamis (contoh: `Terlambat · 2 hari 3 jam`). Aksen garis kiri merah halus pada card.
+- Warna badge dirancang kontras tinggi (memenuhi standar aksesibilitas WCAG AA &ge; 4.5:1) dan jelas berbeda dari badge status bawaan (`Belum` = kuning `#fef3c7`, `Selesai` = hijau `#d1fae5`).
+- **Refetch Otomatis**: Daftar tugas diperbarui secara otomatis saat jendela browser menerima fokus (`window.onfocus`), saat tab aktif kembali (`visibilitychange`), berkala setiap 60 detik selama tab terbuka, serta segera setelah pengguna mengubah status tugas (belum &harr; selesai).
+
+---
 
 ## Prasyarat
+- Node.js &ge; 20.19 atau &ge; 22.12
+- npm
 
-- Node.js 20.19 atau lebih baru (atau 22.12+), sesuai syarat Vite 8.
-- npm.
-
-## Fitur yang Sudah Tersedia
-
-- Registrasi, login, dan logout. Password di-hash dengan bcrypt dan sesi memakai JWT.
-- Manajemen Mata Kuliah: lihat, tambah, dan hapus di UI. Endpoint ubah (`PUT`) juga tersedia di API.
-- Manajemen Tugas per mata kuliah: lihat, tambah, ubah status (belum/selesai), dan hapus di UI. Endpoint ubah (`PUT`) juga tersedia di API.
-- Halaman Daftar Tugas: seluruh tugas pengguna lintas mata kuliah, terurut dari `created_at` terbaru.
+---
 
 ## Cara Menjalankan
 
-### 1. Backend
-
+### 1. Menjalankan Backend
 ```bash
 cd backend
 cp .env.example .env
 npm install
 npm run dev
 ```
+Backend berjalan di `http://localhost:4000`.
 
-Backend berjalan di `http://localhost:4000`. Port dan `JWT_SECRET` bisa diatur lewat file `.env`.
-
-### 2. Frontend
-
-Buka terminal baru, lalu jalankan:
-
+### 2. Menjalankan Frontend
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-
-Frontend berjalan di `http://localhost:5173`. Selama mode development, request `/api/*` otomatis diteruskan ke backend oleh proxy Vite.
+Frontend berjalan di `http://localhost:5173`.
 
 ### 3. Akun Demo
-
-File `backend/db.json` dibuat otomatis saat backend pertama kali dijalankan dan langsung berisi data seed. Anda bisa masuk dengan akun berikut:
-
 | Email | Password |
 | --- | --- |
 | `demo@studytrack.test` | `demo1234` |
 
-Untuk mengembalikan data ke kondisi seed kapan pun:
-
+Untuk mereset database kembali ke seed awal:
 ```bash
 curl -X POST http://localhost:4000/api/dev/reset
 ```
 
-Endpoint ini hanya aktif selama `NODE_ENV` bukan `production`.
+---
 
-## Struktur Data
+## Menjalankan Pengujian (Testing)
 
-Struktur ini mengikuti Bagian 1 (Konteks Aplikasi) pada dokumen studi kasus. Kolom `user_id` ditambahkan di luar daftar itu supaya setiap mahasiswa hanya melihat datanya sendiri.
+Unit test dan integration test menggunakan test runner bawaan `node:test`:
 
-**Mata kuliah** (`courses`)
-
-| Field | Tipe | Keterangan |
-| --- | --- | --- |
-| `id` | integer | Identitas unik |
-| `name` | string | Nama mata kuliah |
-| `kode` | string | Kode mata kuliah, contoh: `CS 186` |
-| `dosen` | string | Nama dosen pengampu |
-| `user_id` | integer | Pemilik data |
-
-**Tugas** (`tasks`)
-
-| Field | Tipe | Keterangan |
-| --- | --- | --- |
-| `id` | integer | Identitas unik |
-| `judul` | string | Judul tugas |
-| `deskripsi` | string | Deskripsi atau catatan tambahan |
-| `deadline` | datetime | Batas pengumpulan |
-| `status` | enum | `belum` atau `selesai` |
-| `mata_kuliah_id` | integer | Referensi ke mata kuliah terkait |
-| `created_at` | datetime | Waktu tugas ditambahkan |
-| `user_id` | integer | Pemilik data |
-
-> **Format waktu.** `deadline` disimpan sebagai waktu lokal tanpa zona waktu, persis seperti keluaran input `datetime-local` (contoh: `2026-07-03T23:59`). Sementara itu `created_at` pada tugas baru berformat ISO 8601 UTC (contoh: `2026-10-23T09:00:00.000Z`). Perhatikan perbedaan ini saat Anda menghitung sisa waktu hingga deadline.
-
-## Data Seed
-
-Data awal sama dengan contoh pada dokumen studi kasus:
-
-| ID | Judul | Mata Kuliah | Deadline | Status |
-| --- | --- | --- | --- | --- |
-| 1 | Lab 4: Query Optimization Report | CS 186, Database Systems | 2026-07-03 23:59 | belum |
-| 2 | Project 3: BSTMap Implementation | CS 61B, Data Structures | 2026-07-02 10:00 | belum |
-| 3 | Sprint 2: Backend API Integration | CS 169, Software Engineering | 2026-07-06 23:59 | belum |
-
-Tanggal pada data seed mengikuti dokumen, sehingga semuanya sudah lewat dari tanggal pengerjaan Anda. Untuk mencoba fitur yang Anda buat, tambahkan tugas baru dengan deadline yang dekat lewat form **Tambah Tugas**.
-
-## Ringkasan API
-
-Semua endpoint di bawah `/api`. Endpoint bertanda "Ya" membutuhkan header `Authorization: Bearer <token>`.
-
-| Method | Path | Login | Keterangan |
-| --- | --- | --- | --- |
-| `GET` | `/health` | Tidak | Cek status server |
-| `POST` | `/auth/register` | Tidak | Daftar akun baru |
-| `POST` | `/auth/login` | Tidak | Login, mengembalikan token |
-| `GET` | `/auth/me` | Ya | Profil pengguna yang sedang login |
-| `GET` | `/courses` | Ya | Daftar mata kuliah |
-| `POST` | `/courses` | Ya | Tambah mata kuliah |
-| `PUT` | `/courses/:id` | Ya | Ubah mata kuliah |
-| `DELETE` | `/courses/:id` | Ya | Hapus mata kuliah beserta tugasnya |
-| `GET` | `/tasks` | Ya | Daftar seluruh tugas, lintas mata kuliah |
-| `GET` | `/tasks/:id` | Ya | Detail satu tugas |
-| `POST` | `/tasks` | Ya | Tambah tugas (`mata_kuliah_id`, `judul`, `deadline`, `deskripsi?`) |
-| `PUT` | `/tasks/:id` | Ya | Ubah tugas, termasuk status |
-| `DELETE` | `/tasks/:id` | Ya | Hapus tugas |
-| `POST` | `/dev/reset` | Tidak | Reset data ke seed (hanya di luar production) |
-
-## Struktur Proyek
-
-```
-studytrack-baseline/
-├── backend/
-│   ├── server.js            # Entry point Express
-│   ├── config.js            # Membaca .env (PORT, JWT_SECRET)
-│   ├── db.js                # Penyimpanan JSON file dan data seed
-│   ├── middleware/auth.js   # Verifikasi JWT
-│   └── routes/
-│       ├── auth.js          # Register, login, profil
-│       ├── courses.js       # CRUD mata kuliah
-│       └── tasks.js         # CRUD tugas (ada catatan untuk peserta)
-└── frontend/
-    └── src/
-        ├── main.jsx, App.jsx, AuthContext.jsx, api.js
-        ├── components/
-        │   ├── Navbar.jsx
-        │   └── TaskCard.jsx # Card tugas (ada catatan untuk peserta)
-        └── pages/
-            ├── Login.jsx, Register.jsx
-            ├── Courses.jsx
-            └── Tasks.jsx    # Halaman Daftar Tugas
+```bash
+cd backend
+npm test
 ```
 
-## Titik Awal Fitur "Reminder Tugas Mendekati Deadline"
+Untuk menguji determinisme zona waktu (WIB independen terhadap zona waktu server):
+```bash
+# Menjalankan dengan zona waktu UTC
+TZ=UTC npm test
 
-Cari komentar bertuliskan **"CATATAN UNTUK PESERTA STUDI KASUS"** pada dua file berikut:
+# Menjalankan dengan zona waktu lokal Jakarta
+TZ=Asia/Jakarta npm test
+```
 
-- `backend/routes/tasks.js`
-- `frontend/src/components/TaskCard.jsx`
+---
 
-Keduanya hanya penunjuk titik yang relevan. Anda tidak harus menaruh logika di sana, silakan sesuaikan dengan rancangan teknis Anda sendiri.
+## Asumsi Desain
 
-## Catatan
-
-- Starter kit ini sengaja dibuat minimal. Fokus utamanya adalah fitur reminder deadline. Bonus lain pada dokumen (pemanfaatan AI/LLM, deployment, dan Git history yang rapi) bersifat opsional.
-- Anda boleh memigrasikan penyimpanan dari file JSON ke database sungguhan (SQLite, PostgreSQL, dan sebagainya), tetapi itu tidak wajib.
-- **Git history.** Salin starter kit ini ke repositori Anda sendiri dan commit kondisi awalnya lebih dulu, lalu kerjakan fitur di branch terpisah dengan commit message yang deskriptif.
-- **Deployment.** Proxy Vite hanya berlaku saat `npm run dev`, jadi frontend hasil build perlu diarahkan ke URL backend (misalnya lewat `baseURL` di `frontend/src/api.js`). Ganti juga `JWT_SECRET` dengan nilai acak dan atur `NODE_ENV=production`. Penyimpanan file di layanan gratis seperti Render atau Railway umumnya bersifat sementara, sehingga `db.json` bisa hilang saat redeploy.
+1. **Format Durasi Sisa Waktu**:
+   - Jika sisa waktu &ge; 24 jam (pada kondisi overdue): diformat menjadi `X hari Y jam` (atau `X hari` jika jam bernilai 0).
+   - Jika sisa waktu &ge; 1 jam: diformat menjadi `X jam Y menit` (atau `X jam` jika menit bernilai 0).
+   - Jika sisa waktu < 1 jam: diformat menjadi `X menit`.
+2. **Nilai `sisa_waktu_ms` pada Tugas Selesai**:
+   - Meskipun tugas berstatus `selesai` selalu memiliki `deadline_category = "normal"`, nilai `sisa_waktu_ms` tetap dihitung dan disertakan jika string deadline valid, agar konsisten dengan struktur data respon.
+3. **Penyimpanan Runtime**:
+   - Berkas database `backend/db.json` adalah data runtime yang diabaikan oleh Git (`.gitignore`), sedangkan data seed awal didefinisikan secara deklaratif di `backend/db.js`.
