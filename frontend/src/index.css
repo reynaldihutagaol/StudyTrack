@@ -10,19 +10,28 @@
 :root {
   --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  /* Token Warna Utama: Latar Canvas Gelap / Hitam */
-  --bg-canvas: #090d16;            /* Hitam pekat modern (Slate-950) */
-  --frame-bg: #111827;             /* Bingkai perangkat gelap pekat */
-  --panel-bg: #ffffff;             /* Panel terang utama */
-  --border-dark: #18181b;          /* Garis outline tegas 1.75px */
+  /* Token Warna Utama: Latar Canvas & Frame Hitam Pekat */
+  --bg-canvas: #000000;
+  /* Hitam pekat netral untuk canvas luar */
+  --frame-bg: #000000;
+  /* Pure Black untuk bingkai perangkat */
+  --panel-bg: #ffffff;
+  /* Panel terang utama */
+  --border-dark: #18181b;
+  /* Garis outline tegas 1.75px */
   --border-muted: #e4e4e7;
-  
+
   /* Aksen Berwarna */
-  --accent-lime: #bef264;          /* Lime segar */
-  --accent-slate: #f1f5f9;         /* Netral pastel */
-  --accent-amber: #fef3c7;         /* Kuning pastel */
-  --accent-red: #fee2e2;           /* Merah pastel */
-  --accent-green: #dcfce7;         /* Hijau pastel */
+  --accent-lime: #bef264;
+  /* Lime segar */
+  --accent-slate: #f1f5f9;
+  /* Netral pastel */
+  --accent-amber: #fef3c7;
+  /* Kuning pastel */
+  --accent-red: #fee2e2;
+  /* Merah pastel */
+  --accent-green: #dcfce7;
+  /* Hijau pastel */
 
   /* Semantik Urgensi */
   --color-urgency-approaching-text: #9a3412;
@@ -43,11 +52,14 @@
   --text-muted: #71717a;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   background-color: var(--bg-canvas);
@@ -75,11 +87,12 @@ html, body {
 
 .device-frame {
   width: 100%;
-  max-width: 1360px;
+  max-width: 1520px;
   background-color: var(--frame-bg);
   border-radius: 36px;
-  padding: 16px 20px 24px 20px;
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  border: 1px solid #1f1f23;
+  padding: 16px 24px 28px 24px;
+  box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.06);
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
@@ -92,7 +105,8 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 14px 18px 14px;
+  padding: 6px 14px 20px 14px;
+  background-color: #000000;
   color: #ffffff;
   position: relative;
 }
@@ -125,10 +139,10 @@ html, body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background-color: #1f2937;
+  background-color: #121214;
   padding: 4px 6px;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid #27272a;
   position: relative;
 }
 
@@ -138,7 +152,7 @@ html, body {
   gap: 8px;
   padding: 8px 18px;
   border-radius: 9999px;
-  color: #9ca3af;
+  color: #a1a1aa;
   text-decoration: none;
   font-size: 0.875rem;
   font-weight: 600;
@@ -147,15 +161,15 @@ html, body {
 }
 
 .device-tab-item:hover {
-  color: #f3f4f6;
-  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  background-color: #1c1c1f;
 }
 
 .device-tab-item.active {
-  background-color: #111827;
+  background-color: #242427;
   color: #ffffff;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .tab-icon {
@@ -184,10 +198,10 @@ html, body {
   display: flex;
   align-items: center;
   gap: 10px;
-  background-color: #1f2937;
+  background-color: #121214;
   padding: 4px 14px 4px 4px;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid #27272a;
 }
 
 .user-avatar-circle {
@@ -217,16 +231,16 @@ html, body {
 
 .user-display-email {
   font-size: 0.725rem;
-  color: #9ca3af;
+  color: #a1a1aa;
 }
 
 .btn-pill-logout {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background-color: transparent;
+  background-color: #121214;
   color: #d1d5db;
-  border: 1.5px solid #374151;
+  border: 1px solid #27272a;
   padding: 6px 14px;
   border-radius: 9999px;
   font-size: 0.8rem;
@@ -236,8 +250,8 @@ html, body {
 }
 
 .btn-pill-logout:hover {
-  background-color: #1f2937;
-  border-color: #4b5563;
+  background-color: #1c1c1f;
+  border-color: #3f3f46;
   color: #ffffff;
 }
 
@@ -248,7 +262,7 @@ html, body {
   background-color: var(--panel-bg);
   border-radius: 28px;
   border: 1.75px solid var(--border-dark);
-  padding: 32px 36px 40px 36px;
+  padding: 36px 44px 44px 44px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
   overflow-x: hidden;
 }
@@ -364,8 +378,8 @@ html, body {
    ========================================================================== */
 .dashboard-grid-layout {
   display: grid;
-  grid-template-columns: 1.62fr 1fr;
-  gap: 32px;
+  grid-template-columns: minmax(0, 1.55fr) minmax(360px, 400px);
+  gap: 36px;
   align-items: start;
 }
 
@@ -469,7 +483,9 @@ html, body {
   margin-bottom: 12px;
 }
 
-.hero-course-tag, .hero-deadline-tag, .hero-remaining-tag {
+.hero-course-tag,
+.hero-deadline-tag,
+.hero-remaining-tag {
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -669,8 +685,8 @@ html, body {
 
 .task-cards-grid-2col {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
 }
 
 /* Komponen TaskCard Neo */
@@ -679,7 +695,7 @@ html, body {
   background-color: #ffffff;
   border: 1.75px solid var(--border-dark);
   border-radius: 20px;
-  padding: 20px;
+  padding: 20px 22px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -728,8 +744,9 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
   margin-bottom: 12px;
-  padding-right: 48px;
+  padding-right: 44px;
 }
 
 .card-kicker-label {
@@ -738,18 +755,29 @@ html, body {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 /* Badge Status / Urgensi */
 .status-badge-pill {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 3px 10px;
+  gap: 6px;
+  padding: 4px 11px;
   border-radius: 9999px;
-  font-size: 0.75rem;
+  font-size: 0.775rem;
   font-weight: 700;
   border: 1px solid transparent;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.badge-icon {
+  flex-shrink: 0;
 }
 
 .badge-mendekati {
@@ -845,6 +873,12 @@ html, body {
   font-size: 0.775rem;
   font-weight: 600;
   color: var(--text-secondary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.deadline-time-text {
+  white-space: nowrap;
 }
 
 .deadline-meta-icon {
@@ -1448,7 +1482,7 @@ html, body {
   gap: 8px;
   padding: 4px 12px;
   border-radius: 9999px;
-  background-color: #111827;
+  background-color: #000000;
   color: #ffffff;
   font-size: 0.8rem;
   font-weight: 700;
@@ -1525,7 +1559,10 @@ html, body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -1557,7 +1594,9 @@ html, body {
 }
 
 @media (max-width: 600px) {
-  html, body {
+
+  html,
+  body {
     overflow-x: hidden;
     width: 100%;
   }

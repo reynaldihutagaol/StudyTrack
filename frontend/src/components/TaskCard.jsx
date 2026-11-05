@@ -188,12 +188,12 @@ export default function TaskCard({ task, onToggleStatus, onDelete }) {
         ) : category === "mendekati" ? (
           <span className="status-badge-pill badge-mendekati">
             <ClockIcon />
-            <span>Mendekati deadline{sisaWaktuFormatted ? ` (${sisaWaktuFormatted})` : ""}</span>
+            <span>Mendekati • {sisaWaktuFormatted || "Segera"}</span>
           </span>
         ) : category === "overdue" ? (
           <span className="status-badge-pill badge-overdue">
             <AlertIcon />
-            <span>Terlambat{sisaWaktuFormatted ? ` (${sisaWaktuFormatted})` : ""}</span>
+            <span>Terlambat • {sisaWaktuFormatted || "Lewat"}</span>
           </span>
         ) : (
           <span className="status-badge-pill badge-normal">
