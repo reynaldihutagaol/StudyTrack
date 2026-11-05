@@ -22,8 +22,8 @@ export default function Navbar() {
   return (
     <header className="device-navbar" aria-label="Navigasi Utama">
       {/* Brand logo */}
-      <Link to="/" className="device-brand">
-        <span className="brand-dot-lime" aria-hidden="true" />
+      <Link to="/" className="device-brand" aria-label="StudyTrack Beranda">
+        <img src="/logo.svg" alt="StudyTrack Logo" className="brand-logo-img" />
         <span className="brand-text">StudyTrack</span>
       </Link>
 

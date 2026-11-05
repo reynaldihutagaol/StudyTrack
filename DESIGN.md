@@ -26,7 +26,7 @@ colors:
   status-selesai-fg: "#166534"
   status-selesai-border: "#16a34a"
   nav-bg: "#121214"
-  nav-active: "#242427"
+  nav-active: "#ffffff"
 typography:
   fontFamily: "Plus Jakarta Sans, -apple-system, BlinkMacSystemFont, sans-serif"
   display:
@@ -92,7 +92,7 @@ StudyTrack mengadopsi sistem visual neo-grotesk berstruktur perangkat modern. La
 
 ## 2. Colors & Tokens
 - **Latar Kanvas & Bingkai Perangkat**: Hitam pekat murni (`#000000`), menciptakan kontras tajam tanpa gradasi atau rona kebiruan.
-- **Header & Navbar**: Latar navbar hitam pekat (`#000000`), tab navigasi pill hitam arang (`#121214`), tab aktif `#242427`, dan pill profil pengguna `#121214`.
+- **Header & Navbar**: Latar navbar hitam pekat (`#000000`), logo sticker "StudyTrack" di kiri atas yang tajam dan dinamis, tab navigasi pill hitam arang (`#121214`), tab aktif berbentuk rounded pill putih kontras tinggi (`#ffffff`) dengan teks dan ikon hitam pekat (`#000000`), dan pill profil pengguna `#121214`.
 - **Panel Utama (App Panel)**: Putih bersih (`#ffffff`) dengan outline gelap tegas `1.75px solid #18181b`, padding lapang `36px 44px` agar tata letak kartu tugas memiliki ruang lega.
 - **Aksen Dekoratif**:
   - Lime (`#bef264`): Digunakan pada brand dot logo, blob ilustrasi 2D hero card, dan pill prioritas.
@@ -101,7 +101,6 @@ StudyTrack mengadopsi sistem visual neo-grotesk berstruktur perangkat modern. La
   - *Mendekati Deadline*: Latar `#fff7ed`, teks `#9a3412`, border `#ea580c`. Format penulisan waktu ringkas dan rapi menggunakan separator bullet: `Mendekati • {sisaWaktu}` dengan `white-space: nowrap` agar tidak terpotong atau berantakan ke baris baru.
   - *Overdue / Terlambat*: Latar `#fef2f2`, teks `#991b1b`, border `#dc2626`. Format: `Terlambat • {sisaWaktu}`.
   - *Status Selesai*: Latar `#f0fdf4`, teks `#166534`, border `#16a34a`.
-  - *Status Belum*: Latar `#f4f4f5`, teks `#52525b`, border netral.
   - *Status Belum*: Latar `#f4f4f5`, teks `#52525b`, border netral.
 
 ## 3. Typography & Spacing

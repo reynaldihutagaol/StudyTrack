@@ -50,7 +50,7 @@ export default function Register() {
         </div>
 
         <div className="auth-brand-badge">
-          <span className="brand-dot-lime" aria-hidden="true" />
+          <img src="/logo.svg" alt="StudyTrack Logo" className="brand-logo-img-auth" />
           <span className="brand-text">StudyTrack</span>
         </div>
 
