@@ -84,6 +84,15 @@ router.post("/", (req, res) => {
     return res.status(400).json({ error: "mata_kuliah_id, judul, dan deadline wajib diisi." });
   }
 
+  const parsedDeadline = parseDeadline(deadline);
+  if (!parsedDeadline) {
+    return res.status(400).json({ error: "Format deadline tidak valid." });
+  }
+  // Cegah penambahan tugas dengan batas waktu yang sudah lampau (toleransi 1 menit)
+  if (parsedDeadline.getTime() < Date.now() - 60000) {
+    return res.status(400).json({ error: "Batas pengumpulan tidak boleh sebelum waktu saat ini." });
+  }
+
   const db = readDB();
   const course = db.courses.find((c) => c.id === Number(mata_kuliah_id) && c.user_id === req.user.id);
   if (!course) {
@@ -127,7 +136,16 @@ router.put("/:id", (req, res) => {
   const { judul, deskripsi, deadline, status } = req.body;
   if (judul !== undefined) task.judul = judul;
   if (deskripsi !== undefined) task.deskripsi = deskripsi;
-  if (deadline !== undefined) task.deadline = deadline;
+  if (deadline !== undefined) {
+    const parsedDeadline = parseDeadline(deadline);
+    if (!parsedDeadline) {
+      return res.status(400).json({ error: "Format deadline tidak valid." });
+    }
+    if (parsedDeadline.getTime() < Date.now() - 60000) {
+      return res.status(400).json({ error: "Batas pengumpulan tidak boleh sebelum waktu saat ini." });
+    }
+    task.deadline = deadline;
+  }
   if (status !== undefined) {
     if (!["belum", "selesai"].includes(status)) {
       return res.status(400).json({ error: "Status hanya boleh 'belum' atau 'selesai'." });
