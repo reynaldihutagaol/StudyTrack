@@ -1,47 +1,47 @@
 ---
 name: StudyTrack Design System
-description: Sistem desain modern, segar, dan berstruktur untuk aplikasi manajemen tugas mahasiswa StudyTrack
+description: Sistem desain modern neo-grotesk berbingkai perangkat dengan layout 2-kolom, hero card, tilted card, dan modal dialog untuk StudyTrack
 colors:
   page-bg: "#ede9fe"
+  frame-bg: "#111827"
   panel-bg: "#ffffff"
   text-primary: "#18181b"
-  text-secondary: "#64748b"
-  text-muted: "#94a3b8"
+  text-secondary: "#52525b"
+  text-muted: "#71717a"
   outline-dark: "#18181b"
-  outline-subtle: "#e2e8f0"
+  outline-subtle: "#e4e4e7"
   accent-lime: "#bef264"
-  accent-lime-tint: "#f7fee7"
-  stat-active: "#f3e8ff"
+  accent-lavender: "#ede9fe"
+  stat-active: "#f5f3ff"
   stat-warning: "#fef3c7"
   stat-danger: "#fee2e2"
   stat-success: "#dcfce7"
-  urgent-mendekati-bg: "#ffedd5"
+  urgent-mendekati-bg: "#fff7ed"
   urgent-mendekati-fg: "#9a3412"
   urgent-mendekati-border: "#ea580c"
-  urgent-overdue-bg: "#fee2e2"
+  urgent-overdue-bg: "#fef2f2"
   urgent-overdue-fg: "#991b1b"
   urgent-overdue-border: "#dc2626"
-  status-selesai-bg: "#dcfce7"
+  status-selesai-bg: "#f0fdf4"
   status-selesai-fg: "#166534"
-  status-belum-bg: "#f1f5f9"
-  status-belum-fg: "#475569"
-  nav-bg: "#18181b"
-  nav-active: "#27272a"
+  status-selesai-border: "#16a34a"
+  nav-bg: "#1f2937"
+  nav-active: "#111827"
 typography:
   fontFamily: "Plus Jakarta Sans, -apple-system, BlinkMacSystemFont, sans-serif"
   display:
-    fontSize: "2rem"
+    fontSize: "2.35rem"
     fontWeight: 800
-    lineHeight: 1.2
+    lineHeight: 1.15
     letterSpacing: "-0.03em"
   h1:
-    fontSize: "1.65rem"
-    fontWeight: 700
+    fontSize: "1.75rem"
+    fontWeight: 800
     lineHeight: 1.25
     letterSpacing: "-0.025em"
   h2:
     fontSize: "1.25rem"
-    fontWeight: 700
+    fontWeight: 800
     lineHeight: 1.3
     letterSpacing: "-0.02em"
   body:
@@ -50,13 +50,14 @@ typography:
     lineHeight: 1.5
   meta:
     fontSize: "0.825rem"
-    fontWeight: 500
+    fontWeight: 600
     lineHeight: 1.4
 rounded:
   sm: "8px"
-  md: "12px"
+  md: "14px"
   lg: "20px"
   xl: "28px"
+  frame: "36px"
   full: "9999px"
 spacing:
   xs: "4px"
@@ -77,61 +78,63 @@ components:
     padding: "8px 16px"
   stat-chip:
     rounded: "{rounded.md}"
-    padding: "10px 14px"
+    padding: "10px 18px"
   task-card:
     backgroundColor: "{colors.panel-bg}"
     rounded: "{rounded.lg}"
-    padding: "20px 22px"
+    padding: "20px 20px"
 ---
 
-# StudyTrack Design System
+# StudyTrack Design System (v2)
 
-## Overview
-StudyTrack adalah aplikasi manajemen tugas kuliah yang memadukan kejelasan fungsional dan estetika modern berorientasi mahasiswa. Desain ini mengadopsi palet latar lavender lembut, kontainer utama melengkung dengan outline gelap tegas, kartu dengan aksen sudut dekoratif segar (lime), bilah navigasi berbentuk kapsul gelap (dark pill navbar), serta chip statistik pastel yang ringkas dan scannable.
+## 1. Overview
+StudyTrack mengadopsi sistem visual neo-grotesk berstruktur perangkat modern (~80% kemiripan visual terhadap referensi estetika tablet application frame). Aplikasi dikemas dalam bingkai luar gelap (`#111827`) dengan sudut melengkung `36px`, navbar terintegrasi dengan active tab notch yang menyatu ke panel putih di bawahnya, header sapaan besar dengan 4 chip statistik pastel ber-outline, tata letak dua kolom (62% / 38%), hero card "Prioritas Utama", 2-kolom grid tugas dengan corner blob melengkung, sidebar ringkasan per mata kuliah dengan progress bar, tilted overlay card (3 derajat), CTA gradien ungu, serta modal dialog tambah tugas yang aksesibel.
 
-## Colors
-- **Latar & Kanvas**: Latar luar lavender sangat lembut (`#ede9fe`), panel utama putih bersih (`#ffffff`) yang kontras dan nyaman di mata.
-- **Outline & Border**: Outline gelap tegas (`#18181b`, ~1.75px) yang membingkai kartu, chip, dan panel aplikasi, memberi struktur grafis yang tajam.
-- **Aksen Dekoratif**: Lime cerah (`#bef264` / `#f7fee7`) digunakan khusus sebagai aksen dekoratif visual sudut kartu, tidak digunakan untuk kode status urgensi.
-- **Semantik Status & Urgensi**:
-  - *Mendekati Deadline*: Oranye hangat (`#ffedd5` latar, `#9a3412` teks, border aksen kiri `#ea580c`).
-  - *Overdue / Terlambat*: Merah tegas (`#fee2e2` latar, `#991b1b` teks, border aksen kiri `#dc2626`).
-  - *Status Selesai*: Hijau daun lembut (`#dcfce7` latar, `#166534` teks).
-  - *Status Belum*: Slate netral (`#f1f5f9` latar, `#475569` teks).
+## 2. Colors & Tokens
+- **Latar Kanvas Luar**: Lavender sangat lembut (`#ede9fe`), memberikan kenyamanan visual dan kontras terhadap bingkai.
+- **Bingkai Perangkat (Device Frame)**: Gelap pekat (`#111827`), sudut `36px`, memberi impresi casing tablet/perangkat modern.
+- **Panel Utama (App Panel)**: Putih bersih (`#ffffff`) dengan outline gelap tegas `1.75px solid #18181b` dan sudut `28px`.
+- **Aksen Dekoratif**:
+  - Lime (`#bef264`): Digunakan pada dot logo, blob ilustrasi 2D hero card, tombol cutout bell, dan aksen sudut tugas mendesak.
+  - Lavender pastel (`#ede9fe`), Amber pastel (`#fef3c7`), Merah pastel (`#fee2e2`), Hijau pastel (`#dcfce7`) untuk chip statistik dan corner blob.
+- **Semantik Urgensi & Status**:
+  - *Mendekati Deadline*: Latar `#fff7ed`, teks `#9a3412`, border `#ea580c`.
+  - *Overdue / Terlambat*: Latar `#fef2f2`, teks `#991b1b`, border `#dc2626`.
+  - *Status Selesai*: Latar `#f0fdf4`, teks `#166534`, border `#16a34a`.
+  - *Status Belum*: Latar `#f4f4f5`, teks `#52525b`, border netral.
 
-## Typography
-- **Font Utama**: *Plus Jakarta Sans*, sans-serif geometris modern dengan bobot tegas untuk judul (700/800) dan keterbacaan tinggi pada teks sekunder (400/500).
-- **Hirarki Tipografi**:
-  - *Hero Greeting / Title*: 1.75rem - 2rem, bobot 800, tracking -0.03em.
-  - *Section Header*: 1.25rem, bobot 700, tracking -0.02em.
-  - *Task Title*: 1.1rem, bobot 700, warna `#18181b`.
-  - *Metadata & Label*: 0.825rem, tabular numbers untuk jam dan tanggal.
+## 3. Typography
+Menggunakan font lokal `@fontsource/plus-jakarta-sans`:
+- **Heading / Sapaan Utama**: Bobot `800` (Extra Bold) dengan letter-spacing `-0.03em`.
+- **Sub-heading & Judul Tugas**: Bobot `800` atau `700`, proporsi teks padat dan terbaca sekilas.
+- **Body & Deskripsi**: Bobot `400` / `500`, teks terpotong rapi dengan ellipsis jika melebihi 2 baris (`-webkit-line-clamp: 2`).
+- **Tag & Label**: Huruf kapital tebal berukuran `0.725rem - 0.775rem`, letter-spacing `0.05em`.
 
-## Layout
-- **Struktur Shell**: Latar lavender dengan kontainer panel utama di tengah ber-radius `28px` yang menampung seluruh konten dan navigasi.
-- **Rhythm Spasial**: Menggunakan grid ritmis berbasis 8px/16px/24px/32px dengan pembagian zona jelas: Navigasi &rarr; Header & Stat Chips &rarr; Form Aksi &rarr; Daftar Kartu.
-- **Responsif**: Di layar ponsel (< 600px), kartu beralih ke tata letak vertikal, chip statistik ditata dalam grid 2x2, dan padding kontainer disesuaikan tanpa horizontal overflow.
+## 4. Layout Architecture
+- **Desktop (>= 1024px)**:
+  - Grid dua kolom proporsional (62% / 38%).
+  - Kolom Kiri:
+    1. Hero Card "Prioritas Utama": Menampilkan tugas paling mendesak (item pertama berkategori mendekati atau normal), blob lime besar dengan SVG icon akademis, tag mata kuliah dan sisa waktu, track bar urgensi, tombol pill "Tandai Selesai", tombol bulat sekunder, dan dual cutout controls di sudut kanan atas.
+    2. Baris Filter Pills: Tab "Semua", "Mendekati", "Normal", "Terlambat", "Selesai" yang hanya menyaring data tanpa mengurutkan ulang.
+    3. Grid 2-Kolom Kartu Tugas: Tiap kartu ber-outline tegas, dengan blob melengkung di sudut kanan atas dan badge semantik lengkap.
+  - Kolom Kanan:
+    1. Sidebar Summary Card: Batang progres (selesai/total per mata kuliah) dihitung dinamis dari data tugas.
+    2. Tilted Overlay Card: Kartu putih berotasi `3deg` menimpa sebagian ringkasan, menampilkan 3 deadline terdekat dengan ikon lightning SVG dan tombol navigasi `Lihat semua tugas`.
+    3. CTA Gradient Card: Gradien ungu (`#4f46e5` ke `#7c3aed`), tombol pill putih yang memicu pembukaan form dalam modal dialog.
+- **Mobile (< 600px)**:
+  - Satu kolom responsif dengan urutan vertikal: Sapaan -> 4 Chip (grid 2 kolom) -> Hero Card -> Filter (scroll horizontal) -> Kartu Tugas (1 kolom) -> Ringkasan Mata Kuliah -> CTA.
+  - Rotasi tilted card otomatis dinonaktifkan (`transform: none`).
+  - Active notch dinonaktifkan agar tidak mengambang saat tab bertumpuk.
+  - Zero horizontal page overflow.
 
-## Elevation & Depth
-- Bukan menggunakan drop shadow blur yang berat, sistem mengadopsi sentuhan neo-grotesk terukur: outline gelap tegas dipadukan dengan bayangan terarah halus `2px 2px 0px #18181b` atau soft lavender ambient shadow `0 12px 32px -8px rgba(109, 40, 217, 0.08)`.
+## 5. Modal Dialog Tambah Tugas (Accessibility)
+Form tambah tugas tidak lagi menguasai halaman utama, melainkan ditempatkan di dalam modal dialog yang memenuhi standar WCAG dan WAI-ARIA:
+- Focus trap di dalam dialog saat aktif.
+- Tombol `Escape` langsung menutup modal.
+- Mengembalikan fokus keyboard secara otomatis ke tombol pemicu saat ditutup.
+- Atribut `role="dialog"`, `aria-modal="true"`, dan `aria-labelledby`.
 
-## Shapes
-- **Corner Radius**:
-  - Panel utama: `28px`
-  - Kartu & Kontainer Form: `20px` - `24px`
-  - Stat Chips & Form Input: `12px` - `14px`
-  - Navigasi & Tombol Aksi: `9999px` (Full Pill)
-
-## Components
-1. **Floating Dark Pill Navbar**: Navigasi kapsul gelap `#18181b` melayang dengan tab aktif abu gelap `#27272a`, ikon SVG, dan chip status pengguna di kanan.
-2. **Stat Chips Bar**: Baris chip statistik di bagian atas halaman dengan outline gelap 1.5px dan warna pastel fungsional (Aktif, Mendekati, Terlambat, Selesai).
-3. **TaskCard**: Kartu putih dengan outline 1.75px, radius 20px, aksen sudut dekoratif lime, garis indikator urgensi kiri (oranye/merah), informasi metadata bertingkat, dan tombol aksi kapsul outline yang proporsional.
-4. **Form Controls**: Input field dan select ber-radius 12px dengan border gelap tegas dan focus ring berkontras tinggi.
-5. **Pill Buttons**: Tombol utama pill hitam pekat, tombol sekunder pill outline berlatar putih, dan tombol destruktif ghost dengan highlight merah lembut.
-
-## Do's and Don'ts
-- **DO**: Pertahankan kontras warna di atas 4.5:1 (WCAG AA).
-- **DO**: Selalu sertakan ikon SVG berdampingan dengan teks status urgensi agar tidak hanya bergantung pada warna.
-- **DO**: Pastikan elemen interaktif memiliki `:focus-visible` outline yang jelas.
-- **DON'T**: Jangan menggunakan aksen lime dekoratif untuk mengindikasikan status tugas atau deadline.
-- **DON'T**: Jangan mengubah format atau logika API server saat menghitung statistik; hitung secara murni dari array tugas yang telah di-fetch.
+## 6. Iconography & Decoration
+- Seluruh ikon menggunakan authored inline SVG datar dengan stroke `2px - 2.5px` konsisten, tanpa emoji, dan tanpa ilustrasi 3D.
+- Bentuk kurva dan blob dibuat dengan path SVG sederhana dan CSS border-radius asimetris.
+- Elemen dekoratif diberi atribut `aria-hidden="true"`.
