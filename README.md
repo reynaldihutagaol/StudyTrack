@@ -77,6 +77,21 @@ Untuk mereset database kembali ke seed awal:
 curl -X POST http://localhost:4000/api/dev/reset
 ```
 
+### 4. Data Demo dengan Deadline Relatif
+Untuk menguji dan mendemokan aplikasi dengan tugas-tugas bertenggat waktu relatif terhadap waktu saat ini (WIB):
+```bash
+cd backend
+npm run seed:demo
+```
+Script ini menambahkan 5 tugas ke akun demo:
+- ~3 jam lagi (mendekati deadline, < 24 jam)
+- ~20 jam lagi (mendekati deadline, < 24 jam)
+- ~2 hari lagi (normal, > 24 jam)
+- ~6 hari lagi (normal, > 24 jam)
+- ~1 hari lalu (overdue, <= 0)
+
+Script ini bersifat idempotent (dapat dijalankan berulang kali tanpa menduplikasi data) dan hanya dapat dijalankan di luar lingkungan production.
+
 ---
 
 ## Menjalankan Pengujian (Testing)
