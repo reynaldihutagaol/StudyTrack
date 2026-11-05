@@ -30,28 +30,9 @@ export default function Register() {
   return (
     <div className="auth-canvas-container">
       <div className="auth-card-neo">
-        {/* Blob dekorasi sudut */}
-        <div className="card-corner-blob blob-lime" aria-hidden="true">
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#18181b"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-            <circle cx="8.5" cy="7" r="4" />
-            <line x1="20" y1="8" x2="20" y2="14" />
-            <line x1="23" y1="11" x2="17" y2="11" />
-          </svg>
-        </div>
-
-        <div className="auth-brand-badge">
+        <div className="auth-brand-header">
           <img src="/logo.svg" alt="StudyTrack Logo" className="brand-logo-img-auth" />
-          <span className="brand-text">StudyTrack</span>
+          <span className="auth-brand-text">StudyTrack</span>
         </div>
 
         <h1 className="auth-title">Buat Akun Baru</h1>
