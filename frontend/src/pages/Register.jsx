@@ -4,8 +4,8 @@ import api from "../api.js";
 import { useAuth } from "../AuthContext.jsx";
 
 /**
- * Halaman Registrasi:
- * Mengadopsi tata letak kartu otentikasi neo-grotesk yang konsisten.
+ * Halaman Registrasi (v2):
+ * Konsisten dengan estetika neo-grotesk StudyTrack, dengan aksen blob lime dan form rapi.
  */
 export default function Register() {
   const [nama, setNama] = useState("");
@@ -30,23 +30,40 @@ export default function Register() {
   return (
     <div className="auth-canvas-container">
       <div className="auth-card-neo">
-        <span className="card-corner-lime-accent" aria-hidden="true" />
-
-        <div className="auth-brand-badge">
-          <span className="brand-dot" aria-hidden="true" />
-          <span>StudyTrack</span>
+        {/* Blob dekorasi sudut */}
+        <div className="card-corner-blob blob-lime" aria-hidden="true">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#18181b"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="8.5" cy="7" r="4" />
+            <line x1="20" y1="8" x2="20" y2="14" />
+            <line x1="23" y1="11" x2="17" y2="11" />
+          </svg>
         </div>
 
-        <h1 className="auth-title">Daftar Akun Baru</h1>
-        <p className="auth-subtitle">Mulai atur tenggat waktu tugas kuliahmu hari ini.</p>
+        <div className="auth-brand-badge">
+          <span className="brand-dot-lime" aria-hidden="true" />
+          <span className="brand-text">StudyTrack</span>
+        </div>
+
+        <h1 className="auth-title">Buat Akun Baru</h1>
+        <p className="auth-subtitle">Mulai catat dan pantau tugas kuliahmu dengan mudah.</p>
 
         <form onSubmit={handleSubmit} className="neo-form">
           <div className="form-group">
-            <label htmlFor="reg-name" className="form-label">
+            <label htmlFor="register-nama" className="form-label">
               Nama Lengkap
             </label>
             <input
-              id="reg-name"
+              id="register-nama"
               type="text"
               placeholder="Contoh: Reynaldi Hutagaol"
               value={nama}
@@ -57,11 +74,11 @@ export default function Register() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="reg-email" className="form-label">
+            <label htmlFor="register-email" className="form-label">
               Alamat Email
             </label>
             <input
-              id="reg-email"
+              id="register-email"
               type="email"
               placeholder="nama@email.test"
               value={email}
@@ -72,13 +89,13 @@ export default function Register() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="reg-password" className="form-label">
-              Kata Sandi (minimal 6 karakter)
+            <label htmlFor="register-password" className="form-label">
+              Kata Sandi
             </label>
             <input
-              id="reg-password"
+              id="register-password"
               type="password"
-              placeholder="••••••••"
+              placeholder="Minimal 6 karakter"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -89,7 +106,7 @@ export default function Register() {
           {error && <p className="form-error-alert" role="alert">{error}</p>}
 
           <button type="submit" className="btn-pill-primary auth-btn-full">
-            Buat Akun Sekarang
+            Daftar Sekarang
           </button>
         </form>
 
