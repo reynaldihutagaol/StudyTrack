@@ -55,7 +55,7 @@ export function formatDuration(ms) {
 }
 
 /**
- * Ikon jam SVG untuk penanda mendekati deadline.
+ * Ikon jam SVG untuk badge reminder mendekati deadline.
  */
 function ClockIcon({ className = "badge-icon" }) {
   return (
@@ -78,7 +78,7 @@ function ClockIcon({ className = "badge-icon" }) {
 }
 
 /**
- * Ikon peringatan SVG untuk penanda overdue / terlambat.
+ * Ikon peringatan SVG untuk badge overdue / terlambat.
  */
 function AlertIcon({ className = "badge-icon" }) {
   return (
@@ -102,14 +102,87 @@ function AlertIcon({ className = "badge-icon" }) {
 }
 
 /**
+ * Ikon kalender kecil SVG untuk metadata deadline.
+ */
+function CalendarIcon({ className = "meta-icon" }) {
+  return (
+    <svg
+      className={className}
+      width="13"
+      height="13"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <rect x="2" y="3" width="12" height="11" rx="2" />
+      <line x1="2" y1="6" x2="14" y2="6" />
+      <line x1="5" y1="1.5" x2="5" y2="3.5" />
+      <line x1="11" y1="1.5" x2="11" y2="3.5" />
+    </svg>
+  );
+}
+
+/**
+ * Ikon tempat sampah SVG untuk aksi hapus yang tenang.
+ */
+function TrashIcon({ className = "btn-icon" }) {
+  return (
+    <svg
+      className={className}
+      width="13"
+      height="13"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <polyline points="3 4 13 4" />
+      <path d="M5 4V2.5a1 1 0 011-1h4a1 1 0 011 1V4" />
+      <path d="M4 4l1 10a1.5 1.5 0 001.5 1.5h5a1.5 1.5 0 001.5-1.5L12 4" />
+    </svg>
+  );
+}
+
+/**
+ * Ikon centang SVG untuk status selesai.
+ */
+function CheckIcon({ className = "badge-icon" }) {
+  return (
+    <svg
+      className={className}
+      width="12"
+      height="12"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <polyline points="3 8.5 6.5 12 13 4.5" />
+    </svg>
+  );
+}
+
+/**
  * Card satu tugas pada halaman Daftar Tugas.
  *
- * Menampilkan judul, mata kuliah, deadline, deskripsi, badge status ("Belum" / "Selesai"),
- * serta badge reminder deadline ("Mendekati deadline" atau "Terlambat") dengan aksen visual
- * border kiri untuk kondisi mendekati dan overdue.
+ * Menampilkan:
+ * 1. Hierarki informasi jelas: Judul > Mata Kuliah > Waktu Deadline > Deskripsi
+ * 2. Badge reminder waktu yang tegas (Mendekati deadline jingga / Terlambat merah)
+ * 3. Badge status tugas netral yang tidak membingungkan warna urgensi
+ * 4. Aksi tombol yang tenang dan proporsional (toggle status outline + hapus ghost)
  *
  * @param {object} props
- * @param {object} props.task Data tugas dari API (termasuk `mata_kuliah`, `deadline_category`, `sisa_waktu_ms`).
+ * @param {object} props.task Data tugas dari API.
  * @param {(task: object) => void} props.onToggleStatus Dipanggil saat tombol status ditekan.
  * @param {(id: number) => void} props.onDelete Dipanggil saat tombol hapus ditekan.
  */
@@ -117,21 +190,35 @@ export default function TaskCard({ task, onToggleStatus, onDelete }) {
   const category = task.deadline_category || "normal";
   const isMendekati = category === "mendekati";
   const isOverdue = category === "overdue";
+  const isSelesai = task.status === "selesai";
 
-  // Kelas aksen garis kiri halus untuk kondisi non-normal
-  const accentClass = isMendekati
+  // Kelas aksen kondisi kartu
+  const cardConditionClass = isSelesai
+    ? "card-selesai"
+    : isMendekati
     ? "accent-mendekati"
     : isOverdue
     ? "accent-overdue"
-    : "";
+    : "card-normal";
 
   return (
-    <div className={`card task-card ${accentClass}`}>
+    <article className={`card task-card ${cardConditionClass}`}>
       <div className="task-content">
-        <strong className="task-title">{task.judul}</strong>
-        <div className="meta task-course">{task.mata_kuliah}</div>
-        <div className="meta task-deadline">Deadline: {formatDeadline(task.deadline)}</div>
-        {task.deskripsi && <div className="meta task-description">{task.deskripsi}</div>}
+        <header className="task-header">
+          <strong className="task-title">{task.judul}</strong>
+          {task.mata_kuliah && (
+            <span className="task-course-pill">{task.mata_kuliah}</span>
+          )}
+        </header>
+
+        <div className="task-deadline-row">
+          <CalendarIcon />
+          <span>Tenggat: {formatDeadline(task.deadline)}</span>
+        </div>
+
+        {task.deskripsi && (
+          <p className="task-description">{task.deskripsi}</p>
+        )}
       </div>
 
       <div className="task-actions-col">
@@ -150,30 +237,41 @@ export default function TaskCard({ task, onToggleStatus, onDelete }) {
             </span>
           )}
 
-          <span className={`badge ${task.status}`}>
-            {task.status === "selesai" ? "Selesai" : "Belum"}
+          <span className={`badge badge-status ${isSelesai ? "selesai" : "belum"}`}>
+            {isSelesai ? (
+              <>
+                <CheckIcon />
+                <span>Selesai</span>
+              </>
+            ) : (
+              <>
+                <span className="status-dot belum" aria-hidden="true" />
+                <span>Belum</span>
+              </>
+            )}
           </span>
         </div>
 
         <div className="task-buttons">
           <button
             type="button"
-            className="btn"
+            className={`btn-action ${isSelesai ? "btn-action-undo" : "btn-action-complete"}`}
             onClick={() => onToggleStatus(task)}
-            aria-label={task.status === "selesai" ? "Tandai tugas belum selesai" : "Tandai tugas selesai"}
+            aria-label={isSelesai ? "Tandai tugas belum selesai" : "Tandai tugas selesai"}
           >
-            {task.status === "selesai" ? "Tandai Belum" : "Tandai Selesai"}
+            {isSelesai ? "Tandai Belum" : "Tandai Selesai"}
           </button>
           <button
             type="button"
-            className="btn btn-delete"
+            className="btn-delete-ghost"
             onClick={() => onDelete(task.id)}
             aria-label={`Hapus tugas ${task.judul}`}
           >
-            Hapus
+            <TrashIcon />
+            <span>Hapus</span>
           </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

@@ -8,13 +8,20 @@
  * 4. ~6 hari lagi (normal)
  * 5. ~1 hari lalu (overdue)
  *
- * Script ini bersifat idempotent: tugas demo relatif sebelumnya yang memiliki penanda
- * `[seed:demo]` akan dibersihkan terlebih dahulu sebelum tugas baru ditambahkan.
+ * Script ini bersifat idempotent: tugas demo relatif dikenali melalui konstanta daftar judul
+ * tetap milik akun demo (user_id = 1), sehingga dapat dijalankan berulang kali tanpa menggandakan data
+ * dan tanpa memerlukan penanda teks khusus di deskripsi.
  * Hanya dapat dijalankan di lingkungan non-production.
  */
 import { readDB, writeDB } from "../db.js";
 
-const DEMO_MARKER = "[seed:demo]";
+export const RELATIVE_DEMO_TITLES = [
+  "Lab 5: B+ Tree Indexing Benchmark",
+  "Tugas 4: Red-Black Tree Balancing",
+  "Sprint 3: CI/CD Pipeline & Integration Tests",
+  "Tugas Besar: Final Architecture Review",
+  "Kuis Singkat: Query Plan Cost Estimation"
+];
 
 if (process.env.NODE_ENV === "production") {
   console.error("Error: Script seed:demo hanya dapat dijalankan pada lingkungan non-production.");
@@ -37,9 +44,9 @@ function runSeedDemo() {
   const db = readDB();
   const demoUserId = 1;
 
-  // Hapus tugas demo relatif yang pernah dibuat sebelumnya agar idempotent
+  // Hapus tugas demo relatif sebelumnya berdasarkan judul tetap akun demo agar idempotent
   db.tasks = db.tasks.filter(
-    (t) => !(t.user_id === demoUserId && t.deskripsi && t.deskripsi.includes(DEMO_MARKER))
+    (t) => !(t.user_id === demoUserId && (RELATIVE_DEMO_TITLES.includes(t.judul) || (t.deskripsi && t.deskripsi.includes("[seed:demo]"))))
   );
 
   const now = new Date();
@@ -53,8 +60,8 @@ function runSeedDemo() {
     {
       user_id: demoUserId,
       mata_kuliah_id: 1, // Database Systems
-      judul: "Lab 5: B+ Tree Indexing Benchmark",
-      deskripsi: `Eksperimen performa B+ Tree index pada dataset besar. ${DEMO_MARKER}`,
+      judul: RELATIVE_DEMO_TITLES[0],
+      deskripsi: "Eksperimen performa B+ Tree index pada dataset besar.",
       deadline: toWIBString(threeHoursLater),
       status: "belum",
       created_at: now.toISOString()
@@ -62,8 +69,8 @@ function runSeedDemo() {
     {
       user_id: demoUserId,
       mata_kuliah_id: 2, // Data Structures
-      judul: "Tugas 4: Red-Black Tree Balancing",
-      deskripsi: `Implementasi rotasi dan balancing pohon Red-Black. ${DEMO_MARKER}`,
+      judul: RELATIVE_DEMO_TITLES[1],
+      deskripsi: "Implementasi rotasi dan balancing pohon Red-Black.",
       deadline: toWIBString(twentyHoursLater),
       status: "belum",
       created_at: now.toISOString()
@@ -71,8 +78,8 @@ function runSeedDemo() {
     {
       user_id: demoUserId,
       mata_kuliah_id: 3, // Software Engineering
-      judul: "Sprint 3: CI/CD Pipeline & Integration Tests",
-      deskripsi: `Konfigurasi workflow automated testing dan linting. ${DEMO_MARKER}`,
+      judul: RELATIVE_DEMO_TITLES[2],
+      deskripsi: "Konfigurasi workflow automated testing dan linting.",
       deadline: toWIBString(twoDaysLater),
       status: "belum",
       created_at: now.toISOString()
@@ -80,8 +87,8 @@ function runSeedDemo() {
     {
       user_id: demoUserId,
       mata_kuliah_id: 3, // Software Engineering
-      judul: "Tugas Besar: Final Architecture Review",
-      deskripsi: `Laporan arsitektur microservices dan dokumentasi API. ${DEMO_MARKER}`,
+      judul: RELATIVE_DEMO_TITLES[3],
+      deskripsi: "Laporan arsitektur microservices dan dokumentasi API.",
       deadline: toWIBString(sixDaysLater),
       status: "belum",
       created_at: now.toISOString()
@@ -89,8 +96,8 @@ function runSeedDemo() {
     {
       user_id: demoUserId,
       mata_kuliah_id: 1, // Database Systems
-      judul: "Kuis Singkat: Query Plan Cost Estimation",
-      deskripsi: `Analisis perbandingan biaya Nested Loop Join vs Hash Join. ${DEMO_MARKER}`,
+      judul: RELATIVE_DEMO_TITLES[4],
+      deskripsi: "Analisis perbandingan biaya Nested Loop Join vs Hash Join.",
       deadline: toWIBString(oneDayAgo),
       status: "belum",
       created_at: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000).toISOString()
